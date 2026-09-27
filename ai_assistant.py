@@ -1,9 +1,22 @@
 import pandas as pd
 
 
+# ==================================================
+# DATA PILOT - İŞ ANALİZ FONKSİYONLARI
+# ==================================================
+
+
 def create_business_summary(df):
+    """
+    Satış verilerinden otomatik iş özeti oluşturur.
+    """
+
+    if df is None or df.empty:
+        return "Analiz edilecek veri bulunamadı."
+
     toplam_satis = df["Toplam_Satis"].sum()
     toplam_adet = df["Adet"].sum()
+    ortalama_satis = df["Toplam_Satis"].mean()
 
     urun_satis = (
         df.groupby("Urun")["Toplam_Satis"]
@@ -17,285 +30,420 @@ def create_business_summary(df):
         .sort_values(ascending=False)
     )
 
+    en_cok_satan_urun = urun_satis.idxmax()
+    en_degerli_segment = segment_satis.idxmax()
+
+    return (
+        f"Toplam satış ₺{toplam_satis:,.0f}. "
+        f"Toplam {toplam_adet:,.0f} adet ürün satıldı. "
+        f"İşlem başına ortalama satış ₺{ortalama_satis:,.0f}. "
+        f"En yüksek satış yapan ürün {en_cok_satan_urun}. "
+        f"En yüksek satış hacmine sahip müşteri segmenti "
+        f"{en_degerli_segment}."
+    )
+
+
+# ==================================================
+# SORU ANALİZİ
+# ==================================================
+
+
+def answer_question(df, question):
+    """
+    Kullanıcının satış verileriyle ilgili sorusunu analiz eder.
+    """
+
+    if df is None or df.empty:
+        return "Analiz edilecek veri bulunamadı."
+
+    if not question or not question.strip():
+        return "Lütfen bir soru yazın."
+
+    soru = question.lower().strip()
+
+    # --------------------------------------------------
+    # TEMEL HESAPLAMALAR
+    # --------------------------------------------------
+
+    toplam_satis = df["Toplam_Satis"].sum()
+
+    toplam_adet = df["Adet"].sum()
+
+    ortalama_satis = df["Toplam_Satis"].mean()
+
+    islem_sayisi = len(df)
+
+    urun_sayisi = df["Urun"].nunique()
+
+    segment_sayisi = df["Musteri_Segmenti"].nunique()
+
+    # --------------------------------------------------
+    # ÜRÜN ANALİZİ
+    # --------------------------------------------------
+
+    urun_satis = (
+        df.groupby("Urun")["Toplam_Satis"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+
     urun_adet = (
         df.groupby("Urun")["Adet"]
         .sum()
         .sort_values(ascending=False)
     )
 
-    return {
-        "toplam_satis": toplam_satis,
-        "toplam_adet": toplam_adet,
-        "ortalama_satis": df["Toplam_Satis"].mean(),
-        "en_cok_satan_urun": urun_satis.idxmax(),
-        "en_az_satan_urun": urun_satis.idxmin(),
-        "en_cok_satan_urun_tutari": urun_satis.max(),
-        "en_az_satan_urun_tutari": urun_satis.min(),
-        "en_cok_satilan_adet_urun": urun_adet.idxmax(),
-        "en_az_satilan_adet_urun": urun_adet.idxmin(),
-        "en_degerli_segment": segment_satis.idxmax(),
-        "en_dusuk_segment": segment_satis.idxmin(),
-        "urun_sayisi": df["Urun"].nunique(),
-        "segment_sayisi": df["Musteri_Segmenti"].nunique()
-    }
+    en_cok_satan_urun = urun_satis.idxmax()
 
+    en_cok_satan_urun_tutari = urun_satis.max()
 
-def answer_question(df, question):
+    en_az_satan_urun = urun_satis.idxmin()
 
-    soru = question.lower().strip()
+    en_az_satan_urun_tutari = urun_satis.min()
 
-    analiz = create_business_summary(df)
+    en_cok_satilan_urun = urun_adet.idxmax()
 
-    toplam_satis = analiz["toplam_satis"]
-    toplam_adet = analiz["toplam_adet"]
-    ortalama_satis = analiz["ortalama_satis"]
+    en_cok_satilan_adet = urun_adet.max()
 
-    en_cok = analiz["en_cok_satan_urun"]
-    en_az = analiz["en_az_satan_urun"]
+    # --------------------------------------------------
+    # SEGMENT ANALİZİ
+    # --------------------------------------------------
 
-    en_cok_tutar = analiz["en_cok_satan_urun_tutari"]
-    en_az_tutar = analiz["en_az_satan_urun_tutari"]
+    segment_satis = (
+        df.groupby("Musteri_Segmenti")["Toplam_Satis"]
+        .sum()
+        .sort_values(ascending=False)
+    )
 
-    en_cok_adet = analiz["en_cok_satilan_adet_urun"]
-    en_az_adet = analiz["en_az_satilan_adet_urun"]
+    en_degerli_segment = segment_satis.idxmax()
 
-    en_degerli_segment = analiz["en_degerli_segment"]
-    en_dusuk_segment = analiz["en_dusuk_segment"]
+    en_degerli_segment_tutari = segment_satis.max()
 
-    # ---------------------------------------------
-    # EN ÇOK SATAN ÜRÜN
-    # ---------------------------------------------
+    # --------------------------------------------------
+    # AYLIK ANALİZ
+    # --------------------------------------------------
 
-    if (
-        "en çok satan" in soru
-        or "en cok satan" in soru
-        or "en fazla satan" in soru
-        or "en iyi satan" in soru
-        or "en yüksek satış" in soru
-        or "en yuksek satis" in soru
-    ):
+    df_analiz = df.copy()
 
-        return (
-            f"🏆 En yüksek satış yapan ürün **{en_cok}**. "
-            f"Bu ürünün toplam satış tutarı "
-            f"**₺{en_cok_tutar:,.0f}**."
-        )
+    df_analiz["Tarih"] = pd.to_datetime(
+        df_analiz["Tarih"],
+        errors="coerce"
+    )
 
-    # ---------------------------------------------
-    # EN AZ SATAN ÜRÜN
-    # ---------------------------------------------
+    aylik_satis = (
+        df_analiz.dropna(subset=["Tarih"])
+        .groupby(
+            df_analiz.dropna(subset=["Tarih"])["Tarih"].dt.to_period("M")
+        )["Toplam_Satis"]
+        .sum()
+        .sort_values(ascending=False)
+    )
 
-    elif (
-        "en az satan" in soru
-        or "en düşük satış" in soru
-        or "en dusuk satis" in soru
-        or "en az satış" in soru
-        or "en az satis" in soru
-    ):
+    if not aylik_satis.empty:
 
-        return (
-            f"📉 En düşük satış yapan ürün **{en_az}**. "
-            f"Bu ürünün toplam satış tutarı "
-            f"**₺{en_az_tutar:,.0f}**."
-        )
+        en_yuksek_ay = aylik_satis.idxmax()
 
-    # ---------------------------------------------
-    # EN ÇOK ADET SATAN
-    # ---------------------------------------------
+        en_yuksek_ay_tutari = aylik_satis.max()
 
-    elif (
-        "en çok adet" in soru
-        or "en cok adet" in soru
-        or "en fazla adet" in soru
-        or "en çok ürün" in soru
-        or "en cok urun" in soru
-    ):
+        en_dusuk_ay = aylik_satis.idxmin()
 
-        adet = df.groupby("Urun")["Adet"].sum()
-
-        return (
-            f"📦 Adet bazında en fazla satılan ürün "
-            f"**{en_cok_adet}**. "
-            f"Toplam **{adet[en_cok_adet]:,.0f} adet** satılmış."
-        )
-
-    # ---------------------------------------------
-    # EN AZ ADET SATAN
-    # ---------------------------------------------
-
-    elif (
-        "en az adet" in soru
-        or "en düşük adet" in soru
-        or "en dusuk adet" in soru
-    ):
-
-        adet = df.groupby("Urun")["Adet"].sum()
-
-        return (
-            f"📉 Adet bazında en az satılan ürün "
-            f"**{en_az_adet}**. "
-            f"Toplam **{adet[en_az_adet]:,.0f} adet** satılmış."
-        )
-
-    # ---------------------------------------------
-    # TOPLAM SATIŞ / CİRO
-    # ---------------------------------------------
-
-    elif (
-        "toplam satış" in soru
-        or "toplam satis" in soru
-        or "ciro" in soru
-        or "gelir" in soru
-        or "kazanç" in soru
-        or "kazanc" in soru
-    ):
-
-        return (
-            f"💰 Toplam satış hacmi "
-            f"**₺{toplam_satis:,.0f}**."
-        )
-
-    # ---------------------------------------------
-    # TOPLAM ADET
-    # ---------------------------------------------
-
-    elif (
-        "kaç ürün" in soru
-        or "kaç adet" in soru
-        or "kac urun" in soru
-        or "kac adet" in soru
-        or "toplam ürün" in soru
-        or "toplam urun" in soru
-    ):
-
-        return (
-            f"📦 Toplam **{toplam_adet:,.0f} adet** ürün satılmış."
-        )
-
-    # ---------------------------------------------
-    # ORTALAMA SATIŞ
-    # ---------------------------------------------
-
-    elif (
-        "ortalama satış" in soru
-        or "ortalama satis" in soru
-        or "ortalama" in soru
-        or "ortalama tutar" in soru
-    ):
-
-        return (
-            f"📊 İşlem başına ortalama satış tutarı "
-            f"**₺{ortalama_satis:,.0f}**."
-        )
-
-    # ---------------------------------------------
-    # EN DEĞERLİ SEGMENT
-    # ---------------------------------------------
-
-    elif (
-        "en değerli müşteri" in soru
-        or "en degerli musteri" in soru
-        or "en iyi müşteri" in soru
-        or "en iyi musteri" in soru
-        or "en çok hangi müşteri" in soru
-        or "en cok hangi musteri" in soru
-        or "en yüksek segment" in soru
-        or "en yuksek segment" in soru
-    ):
-
-        return (
-            f"👥 En yüksek satış hacmine sahip müşteri segmenti "
-            f"**{en_degerli_segment}**."
-        )
-
-    # ---------------------------------------------
-    # EN DÜŞÜK SEGMENT
-    # ---------------------------------------------
-
-    elif (
-        "en az müşteri" in soru
-        or "en az musteri" in soru
-        or "en düşük segment" in soru
-        or "en dusuk segment" in soru
-        or "en kötü segment" in soru
-        or "en kotu segment" in soru
-    ):
-
-        return (
-            f"📉 En düşük satış hacmine sahip müşteri segmenti "
-            f"**{en_dusuk_segment}**."
-        )
-
-    # ---------------------------------------------
-    # KAÇ FARKLI ÜRÜN
-    # ---------------------------------------------
-
-    elif (
-        "kaç farklı ürün" in soru
-        or "kaç ürün var" in soru
-        or "kac farkli urun" in soru
-        or "kaç çeşit ürün" in soru
-        or "kac cesit urun" in soru
-    ):
-
-        return (
-            f"📦 Veri setinde **{analiz['urun_sayisi']} farklı ürün** bulunuyor."
-        )
-
-    # ---------------------------------------------
-    # KAÇ SEGMENT
-    # ---------------------------------------------
-
-    elif (
-        "kaç segment" in soru
-        or "kaç müşteri segmenti" in soru
-        or "kac segment" in soru
-        or "kac musteri segmenti" in soru
-    ):
-
-        return (
-            f"👥 Veri setinde **{analiz['segment_sayisi']} farklı "
-            f"müşteri segmenti** bulunuyor."
-        )
-
-    # ---------------------------------------------
-    # GENEL ÖZET
-    # ---------------------------------------------
-
-    elif (
-        "özet" in soru
-        or "ozet" in soru
-        or "genel durum" in soru
-        or "veriler ne söylüyor" in soru
-        or "veriler ne soyluyor" in soru
-        or "analiz et" in soru
-    ):
-
-        return (
-            f"📊 **Genel Veri Özeti**\n\n"
-            f"• Toplam satış: **₺{toplam_satis:,.0f}**\n\n"
-            f"• Toplam ürün adedi: **{toplam_adet:,.0f}**\n\n"
-            f"• Ortalama satış: **₺{ortalama_satis:,.0f}**\n\n"
-            f"• En yüksek satış yapan ürün: **{en_cok}**\n\n"
-            f"• En düşük satış yapan ürün: **{en_az}**\n\n"
-            f"• En yüksek satış yapan segment: **{en_degerli_segment}**"
-        )
-
-    # ---------------------------------------------
-    # ANLAŞILMAYAN SORU
-    # ---------------------------------------------
+        en_dusuk_ay_tutari = aylik_satis.min()
 
     else:
 
+        en_yuksek_ay = None
+        en_yuksek_ay_tutari = 0
+
+        en_dusuk_ay = None
+        en_dusuk_ay_tutari = 0
+
+    # ==================================================
+    # SORU CEVAPLARI
+    # ==================================================
+
+    # --------------------------------------------------
+    # TOPLAM SATIŞ
+    # --------------------------------------------------
+
+    if (
+        "toplam satış" in soru
+        or "toplam ciro" in soru
+        or "ciro ne kadar" in soru
+        or "ne kadar satış" in soru
+    ):
+
         return (
-            "🤖 Bu soruyu tam olarak anlayamadım.\n\n"
-            "Şunlardan birini deneyebilirsin:\n\n"
-            "• En çok satan ürün hangisi?\n"
-            "• En az satan ürün hangisi?\n"
-            "• Toplam cirom ne kadar?\n"
-            "• Kaç ürün sattım?\n"
-            "• Ortalama satış ne kadar?\n"
-            "• En değerli müşteri segmenti hangisi?\n"
-            "• Kaç farklı ürün var?\n"
-            "• Verileri özetle."
+            f"Toplam satış tutarı ₺{toplam_satis:,.0f}."
         )
+
+    # --------------------------------------------------
+    # TOPLAM ADET
+    # --------------------------------------------------
+
+    if (
+        "kaç adet" in soru
+        or "toplam adet" in soru
+        or "kaç ürün" in soru
+        or "ürün sayısı" in soru
+    ):
+
+        return (
+            f"Toplam {toplam_adet:,.0f} adet ürün satışı gerçekleşti."
+        )
+
+    # --------------------------------------------------
+    # ORTALAMA SATIŞ
+    # --------------------------------------------------
+
+    if (
+        "ortalama satış" in soru
+        or "ortalama tutar" in soru
+        or "ortalama ciro" in soru
+    ):
+
+        return (
+            f"İşlem başına ortalama satış tutarı "
+            f"₺{ortalama_satis:,.0f}."
+        )
+
+    # --------------------------------------------------
+    # EN ÇOK SATAN ÜRÜN
+    # --------------------------------------------------
+
+    if (
+        "en çok satan ürün" in soru
+        or "en fazla satan ürün" in soru
+        or "en başarılı ürün" in soru
+        or "hangi ürün daha çok satıyor" in soru
+    ):
+
+        return (
+            f"En yüksek satış cirosuna sahip ürün "
+            f"{en_cok_satan_urun}. "
+            f"Toplam satış tutarı "
+            f"₺{en_cok_satan_urun_tutari:,.0f}."
+        )
+
+    # --------------------------------------------------
+    # EN ÇOK SATILAN ADET
+    # --------------------------------------------------
+
+    if (
+        "en çok satılan" in soru
+        or "en fazla adet" in soru
+        or "adet olarak en çok" in soru
+    ):
+
+        return (
+            f"Adet bazında en çok satılan ürün "
+            f"{en_cok_satilan_urun}. "
+            f"Toplam {en_cok_satilan_adet:,.0f} adet satıldı."
+        )
+
+    # --------------------------------------------------
+    # EN AZ SATAN ÜRÜN
+    # --------------------------------------------------
+
+    if (
+        "en az satan" in soru
+        or "en düşük satan" in soru
+        or "en az satış" in soru
+    ):
+
+        return (
+            f"En düşük satış cirosuna sahip ürün "
+            f"{en_az_satan_urun}. "
+            f"Toplam satış tutarı "
+            f"₺{en_az_satan_urun_tutari:,.0f}."
+        )
+
+    # --------------------------------------------------
+    # EN DEĞERLİ SEGMENT
+    # --------------------------------------------------
+
+    if (
+        "en değerli segment" in soru
+        or "en iyi müşteri segmenti" in soru
+        or "hangi segment" in soru
+        or "en çok alışveriş yapan segment" in soru
+    ):
+
+        return (
+            f"En yüksek satış hacmine sahip müşteri segmenti "
+            f"{en_degerli_segment}. "
+            f"Toplam satış tutarı "
+            f"₺{en_degerli_segment_tutari:,.0f}."
+        )
+
+    # --------------------------------------------------
+    # AYLIK SATIŞ
+    # --------------------------------------------------
+
+    if (
+        "en yüksek ay" in soru
+        or "en iyi ay" in soru
+        or "hangi ay" in soru
+        or "en çok satış hangi ay" in soru
+    ):
+
+        if en_yuksek_ay is not None:
+
+            return (
+                f"En yüksek satış yapılan ay "
+                f"{en_yuksek_ay}. "
+                f"Toplam satış "
+                f"₺{en_yuksek_ay_tutari:,.0f}."
+            )
+
+        return "Tarih bilgileri analiz için uygun değil."
+
+    # --------------------------------------------------
+    # İŞLEM SAYISI
+    # --------------------------------------------------
+
+    if (
+        "kaç işlem" in soru
+        or "işlem sayısı" in soru
+        or "kaç satış" in soru
+    ):
+
+        return (
+            f"Toplam {islem_sayisi:,} satış işlemi bulunuyor."
+        )
+
+    # --------------------------------------------------
+    # ÜRÜN SAYISI
+    # --------------------------------------------------
+
+    if (
+        "kaç farklı ürün" in soru
+        or "kaç ürün var" in soru
+        or "farklı ürün" in soru
+    ):
+
+        return (
+            f"Veri setinde {urun_sayisi} farklı ürün bulunuyor."
+        )
+
+    # --------------------------------------------------
+    # SEGMENT SAYISI
+    # --------------------------------------------------
+
+    if (
+        "kaç segment" in soru
+        or "kaç müşteri segmenti" in soru
+        or "segment sayısı" in soru
+    ):
+
+        return (
+            f"Veri setinde {segment_sayisi} farklı müşteri segmenti bulunuyor."
+        )
+
+    # --------------------------------------------------
+    # GENEL ÖZET
+    # --------------------------------------------------
+
+    if (
+        "özet" in soru
+        or "genel durum" in soru
+        or "genel analiz" in soru
+        or "performans" in soru
+        or "nasıl gidiyor" in soru
+    ):
+
+        return create_business_summary(df)
+
+    # --------------------------------------------------
+    # YARDIM
+    # --------------------------------------------------
+
+    if (
+        "ne sorabilirim" in soru
+        or "yardım" in soru
+        or "neler yapabilirsin" in soru
+        or "hangi soruları" in soru
+    ):
+
+        return (
+            "Şunları sorabilirsiniz:\n\n"
+            "• En çok satan ürün hangisi?\n"
+            "• Toplam satış ne kadar?\n"
+            "• En değerli müşteri segmenti hangisi?\n"
+            "• En çok hangi ay satış yapıldı?\n"
+            "• Toplam kaç adet ürün satıldı?\n"
+            "• Ortalama satış tutarı ne kadar?\n"
+            "• Genel performans nasıl?"
+        )
+
+    # ==================================================
+    # ÜRÜN ADI ÜZERİNDEN ANALİZ
+    # ==================================================
+
+    for urun in df["Urun"].dropna().unique():
+
+        urun_adi = str(urun).lower()
+
+        if urun_adi in soru:
+
+            urun_verisi = df[
+                df["Urun"].astype(str).str.lower() == urun_adi
+            ]
+
+            urun_toplam_satis = urun_verisi["Toplam_Satis"].sum()
+
+            urun_toplam_adet = urun_verisi["Adet"].sum()
+
+            urun_ortalama = urun_verisi["Toplam_Satis"].mean()
+
+            return (
+                f"{urun} için toplam satış "
+                f"₺{urun_toplam_satis:,.0f}. "
+                f"Toplam {urun_toplam_adet:,.0f} adet satıldı. "
+                f"Ortalama işlem tutarı "
+                f"₺{urun_ortalama:,.0f}."
+            )
+
+    # ==================================================
+    # SEGMENT ADI ÜZERİNDEN ANALİZ
+    # ==================================================
+
+    for segment in df["Musteri_Segmenti"].dropna().unique():
+
+        segment_adi = str(segment).lower()
+
+        if segment_adi in soru:
+
+            segment_verisi = df[
+                df["Musteri_Segmenti"].astype(str).str.lower()
+                == segment_adi
+            ]
+
+            segment_toplam_satis = (
+                segment_verisi["Toplam_Satis"].sum()
+            )
+
+            segment_toplam_adet = (
+                segment_verisi["Adet"].sum()
+            )
+
+            return (
+                f"{segment} segmentinin toplam satış tutarı "
+                f"₺{segment_toplam_satis:,.0f}. "
+                f"Toplam {segment_toplam_adet:,.0f} adet "
+                f"ürün satıldı."
+            )
+
+    # ==================================================
+    # ANLAŞILMAYAN SORU
+    # ==================================================
+
+    return (
+        "Bu soruyu mevcut analiz fonksiyonlarıyla "
+        "yorumlayamadım.\n\n"
+        "Örneğin şunları sorabilirsiniz:\n"
+        "• En çok satan ürün hangisi?\n"
+        "• Toplam satış ne kadar?\n"
+        "• En değerli müşteri segmenti hangisi?\n"
+        "• En çok hangi ay satış yapıldı?\n"
+        "• Ortalama satış tutarı ne kadar?"
+    )
