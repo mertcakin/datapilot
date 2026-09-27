@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from ai_assistant import create_business_summary, answer_question
+from ai_assistant import answer_question
 
 
 # ==================================================
@@ -19,15 +19,15 @@ st.set_page_config(
 
 
 # ==================================================
-# RENKLER
+# RENK PALETİ
 # ==================================================
 
 NAVY = "#071A3A"
 DARK_NAVY = "#041127"
 BLUE = "#0B63CE"
-LIGHT_BLUE = "#38BDF8"
-TURQUOISE = "#18D5C0"
 CYAN = "#06B6D4"
+TURQUOISE = "#18D5C0"
+LIGHT_BLUE = "#38BDF8"
 WHITE = "#FFFFFF"
 LIGHT_BG = "#F4F8FC"
 TEXT = "#10213F"
@@ -35,358 +35,288 @@ MUTED = "#64748B"
 
 
 # ==================================================
-# CSS TASARIM
+# CSS
 # ==================================================
 
 st.markdown(
-    f"""
+    """
     <style>
 
-    /* GENEL */
+    /* ==============================
+       GENEL
+    ============================== */
 
-    .stApp {{
+    .stApp {
         background:
             linear-gradient(
                 135deg,
                 #F7FBFF 0%,
-                #EEF8FF 55%,
-                #F2FFFD 100%
+                #EFF8FF 55%,
+                #F1FFFD 100%
             );
-        color: {TEXT};
-    }}
+    }
 
-    .main {{
-        padding-top: 1rem;
-    }}
+    .main .block-container {
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+        max-width: 1500px;
+    }
 
-    /* SIDEBAR */
 
-    section[data-testid="stSidebar"] {{
+    /* ==============================
+       SIDEBAR
+    ============================== */
+
+    section[data-testid="stSidebar"] {
         background:
             linear-gradient(
                 180deg,
-                {DARK_NAVY} 0%,
-                {NAVY} 55%,
+                #041127 0%,
+                #071A3A 55%,
                 #063B63 100%
             );
-    }}
+    }
 
-    section[data-testid="stSidebar"] * {{
-        color: white !important;
-    }}
+    section[data-testid="stSidebar"] * {
+        color: #FFFFFF;
+    }
 
-    .sidebar-logo {{
-        font-size: 30px;
+    .sidebar-title {
+        font-size: 28px;
         font-weight: 800;
-        margin-bottom: 5px;
-        letter-spacing: -1px;
-    }}
+        margin-bottom: 3px;
+    }
 
-    .sidebar-subtitle {{
-        font-size: 13px;
-        color: #A9C7E8 !important;
-        margin-bottom: 30px;
-    }}
-
-    .sidebar-box {{
-        margin-top: 25px;
-        padding: 20px;
-        border-radius: 22px;
-        border: 1px solid rgba(255,255,255,0.22);
-        background: rgba(255,255,255,0.07);
-        text-align: center;
-    }}
-
-    /* HEADER */
-
-    .hero {{
-        padding: 30px 35px;
-        border-radius: 28px;
-        margin-bottom: 25px;
-        background:
-            linear-gradient(
-                115deg,
-                #FFFFFF 0%,
-                #F4FAFF 48%,
-                #DFFBFA 100%
-            );
-        border: 1px solid #D9EAF7;
-        box-shadow: 0 12px 35px rgba(7,26,58,0.08);
-        position: relative;
-        overflow: hidden;
-    }}
-
-    .hero::after {{
-        content: "";
-        position: absolute;
-        width: 430px;
-        height: 180px;
-        right: -80px;
-        top: -70px;
-        background:
-            linear-gradient(
-                135deg,
-                rgba(6,182,212,0.15),
-                rgba(24,213,192,0.20)
-            );
-        border-radius: 50%;
-    }}
-
-    .hero-title {{
-        font-size: 42px;
-        font-weight: 800;
-        color: {NAVY};
-        letter-spacing: -1.5px;
-        margin-bottom: 5px;
-    }}
-
-    .hero-title span {{
-        background:
-            linear-gradient(
-                90deg,
-                {BLUE},
-                {TURQUOISE}
-            );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }}
-
-    .hero-subtitle {{
-        color: {MUTED};
-        font-size: 17px;
-        margin-bottom: 15px;
-    }}
-
-    .hero-tagline {{
-        color: {NAVY};
-        font-weight: 700;
-        font-size: 14px;
-    }}
-
-    /* SECTION */
-
-    .section-title {{
-        color: {NAVY};
-        font-size: 24px;
-        font-weight: 800;
-        margin-top: 30px;
-        margin-bottom: 15px;
-    }}
-
-    /* KPI CARDS */
-
-    .kpi-card {{
-        background:
-            linear-gradient(
-                145deg,
-                #FFFFFF 0%,
-                #F8FCFF 70%,
-                #E8FFFC 100%
-            );
-        border: 1px solid #DDEBF5;
-        border-radius: 24px;
-        padding: 23px;
-        min-height: 150px;
-        box-shadow: 0 10px 30px rgba(7,26,58,0.07);
-        position: relative;
-        overflow: hidden;
-    }}
-
-    .kpi-card::after {{
-        content: "";
-        position: absolute;
-        width: 95px;
-        height: 95px;
-        right: -30px;
-        bottom: -35px;
-        border-radius: 50%;
-        background:
-            linear-gradient(
-                135deg,
-                rgba(56,189,248,0.18),
-                rgba(24,213,192,0.24)
-            );
-    }}
-
-    .kpi-icon {{
-        width: 45px;
-        height: 45px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background:
-            linear-gradient(
-                135deg,
-                #DFF6FF,
-                #D9FFFA
-            );
-        font-size: 21px;
-        margin-bottom: 13px;
-    }}
-
-    .kpi-label {{
-        color: {MUTED};
-        font-size: 13px;
-        font-weight: 600;
-    }}
-
-    .kpi-value {{
-        color: {NAVY};
-        font-size: 25px;
-        font-weight: 800;
-        margin-top: 4px;
-    }}
-
-    .kpi-description {{
-        color: #718096;
-        font-size: 11px;
-        margin-top: 5px;
-    }}
-
-    /* CHART CARDS */
-
-    .chart-card {{
-        background: #FFFFFF;
-        border: 1px solid #E2ECF5;
-        border-radius: 24px;
-        padding: 18px 20px 10px 20px;
-        box-shadow: 0 10px 30px rgba(7,26,58,0.055);
-        margin-bottom: 18px;
-    }}
-
-    .chart-title {{
-        color: {NAVY};
-        font-size: 18px;
-        font-weight: 800;
-        margin-bottom: 4px;
-    }}
-
-    .chart-subtitle {{
-        color: {MUTED};
+    .sidebar-subtitle {
+        color: #AFC8E4 !important;
         font-size: 12px;
-        margin-bottom: 8px;
-    }}
+        margin-bottom: 25px;
+    }
 
-    /* AI PANEL */
+    .sidebar-divider {
+        height: 1px;
+        background: rgba(255,255,255,0.16);
+        margin: 20px 0;
+    }
 
-    .ai-panel {{
+
+    /* ==============================
+       HERO
+    ============================== */
+
+    .hero-box {
         background:
             linear-gradient(
                 120deg,
-                {DARK_NAVY} 0%,
-                #082B57 48%,
-                #006B78 100%
+                #FFFFFF 0%,
+                #F5FBFF 48%,
+                #DDFBF8 100%
             );
-        border-radius: 30px;
-        padding: 32px;
-        margin-top: 35px;
-        margin-bottom: 25px;
-        box-shadow: 0 20px 45px rgba(4,17,39,0.20);
-        color: white;
-    }}
+        border: 1px solid #D9EAF5;
+        border-radius: 28px;
+        padding: 30px 34px;
+        margin-bottom: 24px;
+        box-shadow:
+            0 12px 35px rgba(7,26,58,0.08);
+    }
 
-    .ai-label {{
-        color: #55E6D8;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 1px;
-    }}
-
-    .ai-title {{
-        font-size: 31px;
+    .hero-title {
+        font-size: 39px;
         font-weight: 800;
-        margin-top: 5px;
-    }}
+        color: #071A3A;
+        letter-spacing: -1.5px;
+        margin-bottom: 5px;
+    }
 
-    .ai-description {{
-        color: #C5D9EC;
-        font-size: 14px;
-        max-width: 600px;
-        line-height: 1.6;
-    }}
-
-    .question-chip {{
-        display: inline-block;
-        background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.18);
-        color: white;
-        border-radius: 30px;
-        padding: 8px 15px;
-        margin: 5px 5px 5px 0;
-        font-size: 12px;
-    }}
-
-    /* INSIGHTS */
-
-    .insight-card {{
-        padding: 20px;
-        border-radius: 22px;
-        background:
-            linear-gradient(
-                135deg,
-                #FFFFFF,
-                #F0FCFF
-            );
-        border: 1px solid #DCECF5;
-        box-shadow: 0 8px 24px rgba(7,26,58,0.05);
-        min-height: 125px;
-    }}
-
-    .insight-title {{
-        font-weight: 800;
-        color: {NAVY};
-        margin-bottom: 8px;
-    }}
-
-    .insight-text {{
-        color: {MUTED};
-        font-size: 13px;
-        line-height: 1.5;
-    }}
-
-    /* DATAFRAME */
-
-    div[data-testid="stDataFrame"] {{
-        border-radius: 18px;
-        overflow: hidden;
-        border: 1px solid #DCE8F2;
-    }}
-
-    /* FILE UPLOADER */
-
-    div[data-testid="stFileUploader"] {{
-        background: rgba(255,255,255,0.08);
-        border-radius: 18px;
-        padding: 5px;
-    }}
-
-    /* INPUT */
-
-    div[data-baseweb="input"] {{
-        border-radius: 16px !important;
-    }}
-
-    /* BUTTON */
-
-    .stButton > button {{
-        border-radius: 14px;
-        border: none;
-        font-weight: 700;
+    .hero-gradient {
         background:
             linear-gradient(
                 90deg,
-                {BLUE},
-                {TURQUOISE}
+                #0B63CE,
+                #06B6D4,
+                #18D5C0
             );
-        color: white;
-    }}
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-    /* DIVIDER */
+    .hero-subtitle {
+        color: #64748B;
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
 
-    hr {{
-        border-color: #DCEAF4;
-    }}
+    .hero-tagline {
+        color: #071A3A;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+
+    /* ==============================
+       SECTION BAŞLIKLARI
+    ============================== */
+
+    .section-title {
+        color: #071A3A;
+        font-size: 23px;
+        font-weight: 800;
+        margin-top: 30px;
+        margin-bottom: 14px;
+    }
+
+
+    /* ==============================
+       KPI
+    ============================== */
+
+    div[data-testid="stMetric"] {
+        background:
+            linear-gradient(
+                145deg,
+                #FFFFFF,
+                #F8FCFF
+            );
+        border: 1px solid #DCEAF4;
+        border-radius: 22px;
+        padding: 18px;
+        box-shadow:
+            0 8px 25px rgba(7,26,58,0.06);
+    }
+
+    div[data-testid="stMetricLabel"] {
+        color: #64748B !important;
+    }
+
+    div[data-testid="stMetricValue"] {
+        color: #071A3A !important;
+        font-weight: 800;
+    }
+
+
+    /* ==============================
+       GRAFİK CONTAINER
+    ============================== */
+
+    .chart-header {
+        color: #071A3A;
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 2px;
+    }
+
+    .chart-description {
+        color: #64748B;
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+
+    /* ==============================
+       INSIGHT
+    ============================== */
+
+    .insight-title {
+        color: #071A3A;
+        font-size: 17px;
+        font-weight: 800;
+    }
+
+    .insight-value {
+        color: #0B63CE;
+        font-size: 21px;
+        font-weight: 800;
+        margin: 8px 0;
+    }
+
+    .insight-description {
+        color: #64748B;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+
+    /* ==============================
+       AI
+    ============================== */
+
+    .ai-label {
+        color: #55E6D8;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    .ai-title {
+        color: #FFFFFF;
+        font-size: 30px;
+        font-weight: 800;
+        margin-top: 3px;
+    }
+
+    .ai-description {
+        color: #C7D9EA;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+
+    /* ==============================
+       DOSYA YÜKLEME
+    ============================== */
+
+    div[data-testid="stFileUploader"] {
+        border-radius: 18px;
+    }
+
+
+    /* ==============================
+       INPUT
+    ============================== */
+
+    div[data-baseweb="input"] {
+        border-radius: 15px !important;
+    }
+
+
+    /* ==============================
+       BUTTON
+    ============================== */
+
+    .stButton > button {
+        border-radius: 14px;
+        border: none;
+        background:
+            linear-gradient(
+                90deg,
+                #0B63CE,
+                #18D5C0
+            );
+        color: #FFFFFF;
+        font-weight: 700;
+    }
+
+
+    /* ==============================
+       TABLE
+    ============================== */
+
+    div[data-testid="stDataFrame"] {
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #DCEAF4;
+    }
+
+
+    /* ==============================
+       EXPANDER
+    ============================== */
+
+    div[data-testid="stExpander"] {
+        border-radius: 18px;
+        border: 1px solid #DCEAF4;
+        background: #FFFFFF;
+    }
 
     </style>
     """,
@@ -401,8 +331,8 @@ st.markdown(
 with st.sidebar:
 
     st.markdown(
-        '<div class="sidebar-logo">📊 DataPilot</div>',
-        unsafe_allow_html=True
+        "📊 **DataPilot**",
+        unsafe_allow_html=False
     )
 
     st.markdown(
@@ -418,27 +348,38 @@ with st.sidebar:
     st.markdown("📈 Zaman Analizi")
     st.markdown("🤖 AI Asistan")
 
-    st.markdown("---")
+    st.markdown(
+        '<div class="sidebar-divider"></div>',
+        unsafe_allow_html=True
+    )
 
     st.markdown("### 📂 Veri Yükle")
 
     uploaded_file = st.file_uploader(
         "CSV veya Excel dosyanızı yükleyin",
-        type=["csv", "xlsx"],
-        label_visibility="visible"
+        type=["csv", "xlsx"]
     )
 
     st.markdown(
         """
-        <div class="sidebar-box">
-            <div style="font-size:32px;">☁️</div>
-            <div style="font-weight:700; margin-top:8px;">
-                Verinizi Analiz Edin
-            </div>
-            <div style="font-size:12px; color:#A9C7E8 !important; margin-top:5px;">
-                CSV veya Excel dosyanızı yükleyerek
-                analiz ekranını başlatın.
-            </div>
+        <div style="
+            padding:18px;
+            margin-top:15px;
+            border-radius:20px;
+            background:rgba(255,255,255,0.08);
+            border:1px solid rgba(255,255,255,0.15);
+            text-align:center;
+        ">
+            ☁️
+            <br><br>
+            <b>Verinizi Analiz Edin</b>
+            <br>
+            <span style="
+                color:#AFC8E4;
+                font-size:12px;
+            ">
+            CSV veya Excel dosyanızı yükleyin.
+            </span>
         </div>
         """,
         unsafe_allow_html=True
@@ -453,53 +394,43 @@ if uploaded_file is None:
 
     st.markdown(
         """
-        <div class="hero">
+        <div class="hero-box">
+
             <div class="hero-title">
-                Data<span>Pilot</span>
+                Merhaba, 
+                <span class="hero-gradient">
+                    DataPilot
+                </span>
             </div>
+
             <div class="hero-subtitle">
                 Yapay zekâ destekli satış ve iş analizi platformu
             </div>
+
             <div class="hero-tagline">
                 Veri → Analiz → İçgörü → Karar
             </div>
+
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    st.markdown(
-        """
-        <div style="
-            background:white;
-            border-radius:28px;
-            padding:50px;
-            text-align:center;
-            border:1px solid #DDEAF4;
-            box-shadow:0 12px 35px rgba(7,26,58,0.07);
-        ">
-            <div style="font-size:55px;">📂</div>
-            <h2 style="color:#071A3A;">
-                Analize Başlayın
-            </h2>
-            <p style="color:#64748B;">
-                Sol menüden CSV veya Excel satış verinizi yükleyin.
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.info(
+        "👈 Analize başlamak için sol menüden "
+        "CSV veya Excel dosyanızı yükleyin."
     )
 
     st.stop()
 
 
 # ==================================================
-# VERİYİ OKU
+# VERİ OKUMA
 # ==================================================
 
 try:
 
-    if uploaded_file.name.endswith(".csv"):
+    if uploaded_file.name.lower().endswith(".csv"):
 
         df = pd.read_csv(uploaded_file)
 
@@ -510,7 +441,7 @@ try:
 except Exception as e:
 
     st.error(
-        f"❌ Dosya okunurken bir hata oluştu: {e}"
+        f"❌ Dosya okunurken hata oluştu: {e}"
     )
 
     st.stop()
@@ -538,7 +469,7 @@ eksik_sutunlar = [
 if eksik_sutunlar:
 
     st.error(
-        "❌ Dosyada gerekli sütunlar bulunamadı: "
+        "❌ Eksik sütunlar: "
         + ", ".join(eksik_sutunlar)
     )
 
@@ -612,42 +543,50 @@ en_degerli_segment_tutari = segment_satis.max()
 # AYLIK SATIŞ
 # ==================================================
 
-aylik_satis = (
-    df.dropna(subset=["Tarih"])
-    .groupby(
-        df.dropna(subset=["Tarih"])["Tarih"].dt.to_period("M")
-    )["Toplam_Satis"]
-    .sum()
-)
+tarih_df = df.dropna(
+    subset=["Tarih"]
+).copy()
 
-aylik_satis.index = aylik_satis.index.astype(str)
+if not tarih_df.empty:
+
+    aylik_satis = (
+        tarih_df.groupby(
+            tarih_df["Tarih"].dt.to_period("M")
+        )["Toplam_Satis"]
+        .sum()
+    )
+
+    aylik_adet = (
+        tarih_df.groupby(
+            tarih_df["Tarih"].dt.to_period("M")
+        )["Adet"]
+        .sum()
+    )
+
+    aylik_satis.index = aylik_satis.index.astype(str)
+
+    aylik_adet.index = aylik_adet.index.astype(str)
+
+else:
+
+    aylik_satis = pd.Series(dtype="float64")
+
+    aylik_adet = pd.Series(dtype="float64")
 
 
 # ==================================================
-# AYLIK ADET
-# ==================================================
-
-aylik_adet = (
-    df.dropna(subset=["Tarih"])
-    .groupby(
-        df.dropna(subset=["Tarih"])["Tarih"].dt.to_period("M")
-    )["Adet"]
-    .sum()
-)
-
-aylik_adet.index = aylik_adet.index.astype(str)
-
-
-# ==================================================
-# BAŞLIK
+# HERO
 # ==================================================
 
 st.markdown(
-    f"""
-    <div class="hero">
+    """
+    <div class="hero-box">
 
         <div class="hero-title">
-            Merhaba, <span>DataPilot</span>
+            Merhaba,
+            <span class="hero-gradient">
+                DataPilot
+            </span>
         </div>
 
         <div class="hero-subtitle">
@@ -670,7 +609,7 @@ st.success(
 
 
 # ==================================================
-# KPI'LAR
+# KPI
 # ==================================================
 
 st.markdown(
@@ -678,115 +617,51 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
 
 
 with kpi1:
 
-    st.markdown(
-        f"""
-        <div class="kpi-card">
-
-            <div class="kpi-icon">💰</div>
-
-            <div class="kpi-label">
-                Toplam Satış
-            </div>
-
-            <div class="kpi-value">
-                ₺{toplam_satis:,.0f}
-            </div>
-
-            <div class="kpi-description">
-                Toplam satış hacmi
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.metric(
+        "💰 Toplam Satış",
+        f"₺{toplam_satis:,.0f}"
     )
 
 
 with kpi2:
 
-    st.markdown(
-        f"""
-        <div class="kpi-card">
-
-            <div class="kpi-icon">📦</div>
-
-            <div class="kpi-label">
-                Toplam Adet
-            </div>
-
-            <div class="kpi-value">
-                {toplam_adet:,.0f}
-            </div>
-
-            <div class="kpi-description">
-                Satılan toplam ürün
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.metric(
+        "📦 Toplam Adet",
+        f"{toplam_adet:,.0f}"
     )
 
 
 with kpi3:
 
-    st.markdown(
-        f"""
-        <div class="kpi-card">
-
-            <div class="kpi-icon">🧾</div>
-
-            <div class="kpi-label">
-                İşlem Sayısı
-            </div>
-
-            <div class="kpi-value">
-                {toplam_islem:,}
-            </div>
-
-            <div class="kpi-description">
-                Toplam satış işlemi
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.metric(
+        "🧾 İşlem Sayısı",
+        f"{toplam_islem:,}"
     )
 
 
 with kpi4:
 
-    st.markdown(
-        f"""
-        <div class="kpi-card">
+    st.metric(
+        "💳 Ortalama Satış",
+        f"₺{ortalama_satis:,.0f}"
+    )
 
-            <div class="kpi-icon">👥</div>
 
-            <div class="kpi-label">
-                En Değerli Segment
-            </div>
+with kpi5:
 
-            <div class="kpi-value">
-                {en_degerli_segment}
-            </div>
-
-            <div class="kpi-description">
-                En yüksek satış hacmine sahip
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.metric(
+        "👥 En Değerli Segment",
+        en_degerli_segment
     )
 
 
 # ==================================================
-# ANA GRAFİKLER
+# SATIŞ TRENDİ + ÜRÜN DAĞILIMI
 # ==================================================
 
 st.markdown(
@@ -794,7 +669,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-col1, col2 = st.columns([1.65, 1])
+col1, col2 = st.columns([1.6, 1])
 
 
 # --------------------------------------------------
@@ -803,63 +678,69 @@ col1, col2 = st.columns([1.65, 1])
 
 with col1:
 
-    st.markdown(
-        """
-        <div class="chart-card">
-            <div class="chart-title">
-                📈 Aylık Satış Trendi
-            </div>
-            <div class="chart-subtitle">
-                Aylara göre toplam satış performansı
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    with st.container(border=True):
 
-    fig = go.Figure()
-
-    fig.add_trace(
-        go.Bar(
-            x=aylik_satis.index,
-            y=aylik_satis.values,
-            name="Aylık Satış",
-            marker=dict(
-                color=aylik_satis.values,
-                colorscale=[
-                    [0, "#0B63CE"],
-                    [0.5, "#18BFD1"],
-                    [1, "#18D5C0"]
-                ]
-            ),
-            hovertemplate="Satış: ₺%{y:,.0f}<extra></extra>"
+        st.markdown(
+            '<div class="chart-header">📈 Aylık Satış Trendi</div>',
+            unsafe_allow_html=True
         )
-    )
 
-    fig.update_layout(
-        height=350,
-        margin=dict(l=10, r=10, t=10, b=10),
-        paper_bgcolor="white",
-        plot_bgcolor="white",
-        font=dict(color=TEXT),
-        showlegend=False,
-        xaxis=dict(
-            title=None,
-            showgrid=False
-        ),
-        yaxis=dict(
-            title=None,
-            gridcolor="#E8F0F6",
-            tickprefix="₺",
-            tickformat=","
+        st.markdown(
+            '<div class="chart-description">'
+            'Aylara göre toplam satış performansı'
+            '</div>',
+            unsafe_allow_html=True
         )
-    )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={"displayModeBar": False}
-    )
+        if not aylik_satis.empty:
+
+            fig = go.Figure()
+
+            fig.add_trace(
+                go.Bar(
+                    x=aylik_satis.index,
+                    y=aylik_satis.values,
+                    marker=dict(
+                        color=aylik_satis.values,
+                        colorscale=[
+                            [0, "#0B63CE"],
+                            [0.5, "#06B6D4"],
+                            [1, "#18D5C0"]
+                        ]
+                    ),
+                    hovertemplate=
+                    "Satış: ₺%{y:,.0f}<extra></extra>"
+                )
+            )
+
+            fig.update_layout(
+                height=350,
+                margin=dict(
+                    l=10,
+                    r=10,
+                    t=10,
+                    b=10
+                ),
+                paper_bgcolor="white",
+                plot_bgcolor="white",
+                showlegend=False,
+                xaxis=dict(
+                    showgrid=False
+                ),
+                yaxis=dict(
+                    gridcolor="#E8F0F6",
+                    tickprefix="₺",
+                    tickformat=","
+                )
+            )
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config={
+                    "displayModeBar": False
+                }
+            )
 
 
 # --------------------------------------------------
@@ -868,191 +749,187 @@ with col1:
 
 with col2:
 
-    st.markdown(
-        """
-        <div class="chart-card">
-            <div class="chart-title">
-                📦 Ürün Satış Dağılımı
-            </div>
-            <div class="chart-subtitle">
-                Ürünlerin toplam satış içindeki payı
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    with st.container(border=True):
 
-    fig = px.pie(
-        names=urun_satis.index,
-        values=urun_satis.values,
-        hole=0.62
-    )
-
-    fig.update_traces(
-        marker=dict(
-            colors=[
-                "#0B63CE",
-                "#18D5C0",
-                "#38BDF8",
-                "#4F8EF7",
-                "#64748B"
-            ],
-            line=dict(
-                color="white",
-                width=3
-            )
-        ),
-        textinfo="percent",
-        hovertemplate="%{label}<br>₺%{value:,.0f}<extra></extra>"
-    )
-
-    fig.update_layout(
-        height=350,
-        margin=dict(l=5, r=5, t=5, b=5),
-        paper_bgcolor="white",
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            y=-0.08
+        st.markdown(
+            '<div class="chart-header">📦 Ürün Satış Dağılımı</div>',
+            unsafe_allow_html=True
         )
-    )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={"displayModeBar": False}
-    )
+        st.markdown(
+            '<div class="chart-description">'
+            'Ürünlerin toplam satış içindeki payı'
+            '</div>',
+            unsafe_allow_html=True
+        )
+
+        fig = px.pie(
+            names=urun_satis.index,
+            values=urun_satis.values,
+            hole=0.62
+        )
+
+        fig.update_traces(
+            marker=dict(
+                colors=[
+                    "#0B63CE",
+                    "#06B6D4",
+                    "#18D5C0",
+                    "#38BDF8",
+                    "#64748B"
+                ],
+                line=dict(
+                    color="white",
+                    width=3
+                )
+            ),
+            textinfo="percent",
+            hovertemplate=
+            "%{label}<br>₺%{value:,.0f}<extra></extra>"
+        )
+
+        fig.update_layout(
+            height=350,
+            margin=dict(
+                l=5,
+                r=5,
+                t=5,
+                b=5
+            ),
+            paper_bgcolor="white",
+            showlegend=True
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config={
+                "displayModeBar": False
+            }
+        )
 
 
 # ==================================================
-# İKİNCİ GRAFİK SATIRI
+# ÜRÜN + SEGMENT GRAFİKLERİ
 # ==================================================
 
 col1, col2 = st.columns(2)
 
 
-# --------------------------------------------------
-# ÜRÜN PERFORMANSI
-# --------------------------------------------------
-
 with col1:
 
-    st.markdown(
-        """
-        <div class="chart-card">
-            <div class="chart-title">
-                🏆 Ürün Performansı
-            </div>
-            <div class="chart-subtitle">
-                Ürün bazında satış tutarları
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    with st.container(border=True):
 
-    fig = px.bar(
-        x=urun_satis.values,
-        y=urun_satis.index,
-        orientation="h"
-    )
+        st.markdown(
+            '<div class="chart-header">🏆 Ürün Performansı</div>',
+            unsafe_allow_html=True
+        )
 
-    fig.update_traces(
-        marker=dict(
-            color=[
-                "#0B63CE",
-                "#159BD7",
-                "#18BFD1",
-                "#18D5C0",
-                "#73E6DB"
-            ]
-        ),
-        hovertemplate="₺%{x:,.0f}<extra></extra>"
-    )
+        st.markdown(
+            '<div class="chart-description">'
+            'Ürün bazında toplam satış'
+            '</div>',
+            unsafe_allow_html=True
+        )
 
-    fig.update_layout(
-        height=350,
-        margin=dict(l=10, r=10, t=10, b=10),
-        paper_bgcolor="white",
-        plot_bgcolor="white",
-        xaxis=dict(
-            title=None,
-            gridcolor="#E8F0F6",
-            tickprefix="₺"
-        ),
-        yaxis=dict(
-            title=None
-        ),
-        showlegend=False
-    )
+        fig = px.bar(
+            x=urun_satis.values,
+            y=urun_satis.index,
+            orientation="h"
+        )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={"displayModeBar": False}
-    )
+        fig.update_traces(
+            marker_color="#0B63CE",
+            hovertemplate=
+            "₺%{x:,.0f}<extra></extra>"
+        )
 
+        fig.update_layout(
+            height=350,
+            margin=dict(
+                l=10,
+                r=10,
+                t=10,
+                b=10
+            ),
+            paper_bgcolor="white",
+            plot_bgcolor="white",
+            xaxis=dict(
+                gridcolor="#E8F0F6",
+                tickprefix="₺",
+                tickformat=","
+            ),
+            yaxis=dict(
+                title=None
+            ),
+            showlegend=False
+        )
 
-# --------------------------------------------------
-# SEGMENT ANALİZİ
-# --------------------------------------------------
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config={
+                "displayModeBar": False
+            }
+        )
+
 
 with col2:
 
-    st.markdown(
-        """
-        <div class="chart-card">
-            <div class="chart-title">
-                👥 Müşteri Segmenti Analizi
-            </div>
-            <div class="chart-subtitle">
-                Segmentlere göre satış hacmi
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    with st.container(border=True):
 
-    fig = px.bar(
-        x=segment_satis.values,
-        y=segment_satis.index,
-        orientation="h"
-    )
+        st.markdown(
+            '<div class="chart-header">👥 Müşteri Segmenti Analizi</div>',
+            unsafe_allow_html=True
+        )
 
-    fig.update_traces(
-        marker=dict(
-            color=[
-                "#0B63CE",
-                "#18BFD1",
-                "#18D5C0",
-                "#4F8EF7",
-                "#73E6DB"
-            ]
-        ),
-        hovertemplate="₺%{x:,.0f}<extra></extra>"
-    )
+        st.markdown(
+            '<div class="chart-description">'
+            'Segmentlere göre satış hacmi'
+            '</div>',
+            unsafe_allow_html=True
+        )
 
-    fig.update_layout(
-        height=350,
-        margin=dict(l=10, r=10, t=10, b=10),
-        paper_bgcolor="white",
-        plot_bgcolor="white",
-        xaxis=dict(
-            title=None,
-            gridcolor="#E8F0F6",
-            tickprefix="₺"
-        ),
-        yaxis=dict(
-            title=None
-        ),
-        showlegend=False
-    )
+        fig = px.bar(
+            x=segment_satis.values,
+            y=segment_satis.index,
+            orientation="h"
+        )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={"displayModeBar": False}
-    )
+        fig.update_traces(
+            marker_color="#18D5C0",
+            hovertemplate=
+            "₺%{x:,.0f}<extra></extra>"
+        )
+
+        fig.update_layout(
+            height=350,
+            margin=dict(
+                l=10,
+                r=10,
+                t=10,
+                b=10
+            ),
+            paper_bgcolor="white",
+            plot_bgcolor="white",
+            xaxis=dict(
+                gridcolor="#E8F0F6",
+                tickprefix="₺",
+                tickformat=","
+            ),
+            yaxis=dict(
+                title=None
+            ),
+            showlegend=False
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config={
+                "displayModeBar": False
+            }
+        )
 
 
 # ==================================================
@@ -1067,145 +944,165 @@ st.markdown(
 col1, col2 = st.columns(2)
 
 
-# --------------------------------------------------
-# AYLIK ADET
-# --------------------------------------------------
-
 with col1:
 
-    st.markdown(
-        """
-        <div class="chart-card">
-            <div class="chart-title">
-                📦 Aylık Ürün Adedi
-            </div>
-            <div class="chart-subtitle">
-                Aylara göre satılan ürün miktarı
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    with st.container(border=True):
 
-    fig = go.Figure()
-
-    fig.add_trace(
-        go.Scatter(
-            x=aylik_adet.index,
-            y=aylik_adet.values,
-            mode="lines+markers",
-            line=dict(
-                color=TURQUOISE,
-                width=4
-            ),
-            marker=dict(
-                size=9,
-                color=BLUE
-            ),
-            hovertemplate="%{y:,.0f} adet<extra></extra>"
+        st.markdown(
+            '<div class="chart-header">📦 Aylık Ürün Adedi</div>',
+            unsafe_allow_html=True
         )
-    )
 
-    fig.update_layout(
-        height=330,
-        margin=dict(l=10, r=10, t=10, b=10),
-        paper_bgcolor="white",
-        plot_bgcolor="white",
-        xaxis=dict(
-            showgrid=False
-        ),
-        yaxis=dict(
-            gridcolor="#E8F0F6"
-        ),
-        showlegend=False
-    )
+        st.markdown(
+            '<div class="chart-description">'
+            'Aylara göre satılan toplam ürün'
+            '</div>',
+            unsafe_allow_html=True
+        )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={"displayModeBar": False}
-    )
+        if not aylik_adet.empty:
 
+            fig = go.Figure()
 
-# --------------------------------------------------
-# SATIŞ + ADET KARŞILAŞTIRMASI
-# --------------------------------------------------
+            fig.add_trace(
+                go.Scatter(
+                    x=aylik_adet.index,
+                    y=aylik_adet.values,
+                    mode="lines+markers",
+                    line=dict(
+                        color=TURQUOISE,
+                        width=4
+                    ),
+                    marker=dict(
+                        color=BLUE,
+                        size=9
+                    ),
+                    fill="tozeroy",
+                    fillcolor="rgba(24,213,192,0.10)",
+                    hovertemplate=
+                    "%{y:,.0f} adet<extra></extra>"
+                )
+            )
+
+            fig.update_layout(
+                height=330,
+                margin=dict(
+                    l=10,
+                    r=10,
+                    t=10,
+                    b=10
+                ),
+                paper_bgcolor="white",
+                plot_bgcolor="white",
+                xaxis=dict(
+                    showgrid=False
+                ),
+                yaxis=dict(
+                    gridcolor="#E8F0F6"
+                ),
+                showlegend=False
+            )
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config={
+                    "displayModeBar": False
+                }
+            )
+
 
 with col2:
 
-    st.markdown(
-        """
-        <div class="chart-card">
-            <div class="chart-title">
-                🔄 Satış ve Adet Karşılaştırması
-            </div>
-            <div class="chart-subtitle">
-                Aylık satış ve ürün miktarı
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    with st.container(border=True):
 
-    fig = go.Figure()
-
-    fig.add_trace(
-        go.Scatter(
-            x=aylik_satis.index,
-            y=aylik_satis.values,
-            mode="lines+markers",
-            name="Satış",
-            line=dict(
-                color=BLUE,
-                width=4
-            ),
-            marker=dict(size=8),
-            hovertemplate="₺%{y:,.0f}<extra></extra>"
+        st.markdown(
+            '<div class="chart-header">🔄 Satış ve Adet Karşılaştırması</div>',
+            unsafe_allow_html=True
         )
-    )
 
-    fig.add_trace(
-        go.Scatter(
-            x=aylik_adet.index,
-            y=aylik_adet.values,
-            mode="lines+markers",
-            name="Adet",
-            line=dict(
-                color=TURQUOISE,
-                width=4
-            ),
-            marker=dict(size=8),
-            yaxis="y2",
-            hovertemplate="%{y:,.0f} adet<extra></extra>"
+        st.markdown(
+            '<div class="chart-description">'
+            'Aylık satış tutarı ve ürün adedi'
+            '</div>',
+            unsafe_allow_html=True
         )
-    )
 
-    fig.update_layout(
-        height=330,
-        margin=dict(l=10, r=10, t=10, b=10),
-        paper_bgcolor="white",
-        plot_bgcolor="white",
-        yaxis=dict(
-            title="Satış",
-            tickprefix="₺",
-            gridcolor="#E8F0F6"
-        ),
-        yaxis2=dict(
-            title="Adet",
-            overlaying="y",
-            side="right"
-        ),
-        legend=dict(
-            orientation="h",
-            y=1.12
-        )
-    )
+        if not aylik_satis.empty:
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={"displayModeBar": False}
-    )
+            fig = go.Figure()
+
+            fig.add_trace(
+                go.Scatter(
+                    x=aylik_satis.index,
+                    y=aylik_satis.values,
+                    mode="lines+markers",
+                    name="Satış",
+                    line=dict(
+                        color=BLUE,
+                        width=4
+                    ),
+                    marker=dict(
+                        size=8
+                    ),
+                    hovertemplate=
+                    "₺%{y:,.0f}<extra></extra>"
+                )
+            )
+
+            fig.add_trace(
+                go.Scatter(
+                    x=aylik_adet.index,
+                    y=aylik_adet.values,
+                    mode="lines+markers",
+                    name="Adet",
+                    line=dict(
+                        color=TURQUOISE,
+                        width=4
+                    ),
+                    marker=dict(
+                        size=8
+                    ),
+                    yaxis="y2",
+                    hovertemplate=
+                    "%{y:,.0f} adet<extra></extra>"
+                )
+            )
+
+            fig.update_layout(
+                height=330,
+                margin=dict(
+                    l=10,
+                    r=10,
+                    t=10,
+                    b=10
+                ),
+                paper_bgcolor="white",
+                plot_bgcolor="white",
+                yaxis=dict(
+                    title="Satış",
+                    tickprefix="₺",
+                    tickformat=",",
+                    gridcolor="#E8F0F6"
+                ),
+                yaxis2=dict(
+                    title="Adet",
+                    overlaying="y",
+                    side="right"
+                ),
+                legend=dict(
+                    orientation="h",
+                    y=1.12
+                )
+            )
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config={
+                    "displayModeBar": False
+                }
+            )
 
 
 # ==================================================
@@ -1223,78 +1120,99 @@ urun_payi = (
     else 0
 )
 
-
 insight1, insight2, insight3 = st.columns(3)
 
 
 with insight1:
 
-    st.markdown(
-        f"""
-        <div class="insight-card">
+    with st.container(border=True):
 
-            <div class="insight-title">
-                🏆 Ürün Performansı
+        st.markdown(
+            '<div class="insight-title">🏆 Ürün Performansı</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f'<div class="insight-value">'
+            f'{en_cok_satan_urun}'
+            f'</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f"""
+            <div class="insight-description">
+                Toplam satışların yaklaşık
+                <b>%{urun_payi:.1f}</b>'ini
+                oluşturuyor.
+                <br><br>
+                Satış tutarı:
+                <b>₺{en_cok_satan_urun_tutari:,.0f}</b>
             </div>
-
-            <div class="insight-text">
-                <b>{en_cok_satan_urun}</b>,
-                toplam satışların yaklaşık
-                <b>%{urun_payi:.1f}</b>'ini oluşturuyor.
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
 
 
 with insight2:
 
-    st.markdown(
-        f"""
-        <div class="insight-card">
+    with st.container(border=True):
 
-            <div class="insight-title">
-                👥 Müşteri Analizi
+        st.markdown(
+            '<div class="insight-title">👥 Müşteri Analizi</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f'<div class="insight-value">'
+            f'{en_degerli_segment}'
+            f'</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f"""
+            <div class="insight-description">
+                En yüksek satış hacmine sahip
+                müşteri segmentidir.
+                <br><br>
+                Satış tutarı:
+                <b>₺{en_degerli_segment_tutari:,.0f}</b>
             </div>
-
-            <div class="insight-text">
-                En yüksek satış hacmine sahip segment
-                <b>{en_degerli_segment}</b>.
-                Toplam satış:
-                <b>₺{en_degerli_segment_tutari:,.0f}</b>.
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
 
 
 with insight3:
 
-    st.markdown(
-        f"""
-        <div class="insight-card">
+    with st.container(border=True):
 
-            <div class="insight-title">
-                💳 Ortalama İşlem
+        st.markdown(
+            '<div class="insight-title">💳 Ortalama İşlem</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f'<div class="insight-value">'
+            f'₺{ortalama_satis:,.0f}'
+            f'</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            """
+            <div class="insight-description">
+                İşlem başına gerçekleşen
+                ortalama satış tutarıdır.
             </div>
-
-            <div class="insight-text">
-                İşlem başına ortalama satış tutarı
-                <b>₺{ortalama_satis:,.0f}</b>.
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
 
 
 # ==================================================
-# ÜRÜN TABLOSU
+# ÜRÜN PERFORMANS TABLOSU
 # ==================================================
 
 st.markdown(
@@ -1335,52 +1253,54 @@ st.dataframe(
 # ==================================================
 
 st.markdown(
-    """
-    <div class="ai-panel">
-
-        <div class="ai-label">
-            ✦ YAPAY ZEKÂ ASİSTANI
-        </div>
-
-        <div class="ai-title">
-            DataPilot AI
-        </div>
-
-        <div class="ai-description">
-            Satış verilerinizi analiz edin,
-            sorularınızı yazın ve verilerinizden
-            anında anlamlı cevaplar alın.
-        </div>
-
-        <div style="margin-top:20px;">
-
-            <span class="question-chip">
-                En çok satan ürün hangisi?
-            </span>
-
-            <span class="question-chip">
-                Toplam satış ne kadar?
-            </span>
-
-            <span class="question-chip">
-                En değerli müşteri segmenti hangisi?
-            </span>
-
-            <span class="question-chip">
-                En çok hangi ay satış yapıldı?
-            </span>
-
-            <span class="question-chip">
-                Laptop satışları nasıl?
-            </span>
-
-        </div>
-
-    </div>
-    """,
+    '<div class="section-title">🤖 DataPilot AI</div>',
     unsafe_allow_html=True
 )
 
+with st.container(border=True):
+
+    st.markdown(
+        '<div class="ai-label">YAPAY ZEKÂ ASİSTANI</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="ai-title">DataPilot AI</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="ai-description">'
+        'Satış verilerinizi analiz edin, sorularınızı yazın '
+        've verilerinizden anlamlı cevaplar alın.'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown("")
+
+    st.markdown(
+        "**💬 Örnek sorular**"
+    )
+
+    q1, q2, q3 = st.columns(3)
+
+    with q1:
+        st.caption("• En çok satan ürün hangisi?")
+        st.caption("• Toplam satış ne kadar?")
+
+    with q2:
+        st.caption("• En değerli müşteri segmenti hangisi?")
+        st.caption("• En çok hangi ay satış yapıldı?")
+
+    with q3:
+        st.caption("• Laptop satışları nasıl?")
+        st.caption("• Genel performans nasıl?")
+
+
+# ==================================================
+# AI SORU ALANI
+# ==================================================
 
 soru = st.text_input(
     "💬 DataPilot'a sorun",
@@ -1396,42 +1316,13 @@ if soru:
         soru
     )
 
-    st.markdown(
-        f"""
-        <div style="
-            background:
-                linear-gradient(
-                    135deg,
-                    #071A3A,
-                    #063B63
-                );
-            color:white;
-            border-radius:22px;
-            padding:25px;
-            margin-top:15px;
-            box-shadow:0 10px 30px rgba(7,26,58,0.15);
-        ">
+    st.markdown("### 🤖 DataPilot'ın Cevabı")
 
-            <div style="
-                color:#55E6D8;
-                font-size:13px;
-                font-weight:700;
-                margin-bottom:10px;
-            ">
-                🤖 DATAPILOT
-            </div>
+    with st.container(border=True):
 
-            <div style="
-                font-size:16px;
-                line-height:1.7;
-            ">
-                {cevap}
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+        st.info(
+            cevap
+        )
 
 
 # ==================================================
@@ -1443,10 +1334,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-col1, col2, col3 = st.columns(3)
+ozet1, ozet2, ozet3 = st.columns(3)
 
 
-with col1:
+with ozet1:
 
     st.metric(
         "Veri Satırı",
@@ -1454,7 +1345,7 @@ with col1:
     )
 
 
-with col2:
+with ozet2:
 
     st.metric(
         "Ürün Sayısı",
@@ -1462,7 +1353,7 @@ with col2:
     )
 
 
-with col3:
+with ozet3:
 
     st.metric(
         "Müşteri Segmenti",
@@ -1471,7 +1362,7 @@ with col3:
 
 
 # ==================================================
-# VERİ ÖNİZLEME
+# HAM VERİ
 # ==================================================
 
 with st.expander("📄 Ham Veriyi Görüntüle"):
@@ -1487,19 +1378,9 @@ with st.expander("📄 Ham Veriyi Görüntüle"):
 # FOOTER
 # ==================================================
 
-st.markdown(
-    """
-    <div style="
-        text-align:center;
-        padding:35px 10px 20px 10px;
-        color:#64748B;
-        font-size:12px;
-    ">
-        <b style="color:#071A3A;">DataPilot</b>
-        • Satış Verileri Analiz ve İş İçgörü Platformu
-        <br>
-        Veri → Analiz → İçgörü → Karar
-    </div>
-    """,
-    unsafe_allow_html=True
+st.divider()
+
+st.caption(
+    "DataPilot • Satış Verileri Analiz ve İş İçgörü Platformu • "
+    "Veri → Analiz → İçgörü → Karar"
 )
