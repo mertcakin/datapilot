@@ -516,56 +516,10 @@ with st.sidebar:
 
 if uploaded_file is None:
 
+    empty_state_html = """<div class="hero"><div class="hero-copy"><div class="hero-small">YAPAY ZEKÂ DESTEKLİ İŞ ANALİZİ</div><div class="hero-title">Merhaba, <span class="hero-highlight">DataPilot</span></div><div class="hero-description">Satış verilerinizden anlamlı iş içgörüleri keşfedin.</div><div class="hero-flow"><span>🗄️ Veri</span><b>→</b><span>📊 Analiz</span><b>→</b><span>💡 İçgörü</span><b>→</b><span>🎯 Karar</span></div></div><div class="hero-visual"><div class="mini-chart"><i style="height:28%"></i><i style="height:45%"></i><i style="height:58%"></i><i style="height:38%"></i><i style="height:75%"></i><i style="height:92%"></i></div></div></div>"""
+
     st.markdown(
-        dedent(
-            """
-            <div class="hero">
-
-                <div class="hero-copy">
-
-                    <div class="hero-small">
-                        YAPAY ZEKÂ DESTEKLİ İŞ ANALİZİ
-                    </div>
-
-                    <div class="hero-title">
-                        Merhaba,
-                        <span class="hero-highlight">
-                            DataPilot
-                        </span>
-                    </div>
-
-                    <div class="hero-description">
-                        Satış verilerinizden anlamlı iş içgörüleri keşfedin.
-                    </div>
-
-                    <div class="hero-flow">
-                        <span>🗄️ Veri</span>
-                        <b>→</b>
-                        <span>📊 Analiz</span>
-                        <b>→</b>
-                        <span>💡 İçgörü</span>
-                        <b>→</b>
-                        <span>🎯 Karar</span>
-                    </div>
-
-                </div>
-
-                <div class="hero-visual">
-
-                    <div class="mini-chart">
-                        <i style="height:28%"></i>
-                        <i style="height:45%"></i>
-                        <i style="height:58%"></i>
-                        <i style="height:38%"></i>
-                        <i style="height:75%"></i>
-                        <i style="height:92%"></i>
-                    </div>
-
-                </div>
-
-            </div>
-            """
-        ),
+        empty_state_html,
         unsafe_allow_html=True
     )
 
