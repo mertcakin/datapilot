@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from ai_assistant import create_business_summary
 
 # --------------------------------------------------
 # SAYFA AYARLARI
