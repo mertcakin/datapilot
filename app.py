@@ -1,10 +1,12 @@
 import streamlit as st
 import pandas as pd
+
 from ai_assistant import create_business_summary
 
-# --------------------------------------------------
+
+# ==================================================
 # SAYFA AYARLARI
-# --------------------------------------------------
+# ==================================================
 
 st.set_page_config(
     page_title="DataPilot | İş Analizi",
@@ -12,9 +14,10 @@ st.set_page_config(
     layout="wide"
 )
 
-# --------------------------------------------------
-# ÖZEL TASARIM
-# --------------------------------------------------
+
+# ==================================================
+# TASARIM
+# ==================================================
 
 st.markdown("""
 <style>
@@ -49,9 +52,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------------
+
+# ==================================================
 # BAŞLIK
-# --------------------------------------------------
+# ==================================================
 
 st.markdown(
     '<div class="main-title">👋 Merhaba, DataPilot\'a Hoş Geldiniz!</div>',
@@ -68,9 +72,10 @@ st.write(
     "tek ekrandan analiz edin ve önemli iş içgörülerini keşfedin."
 )
 
-# --------------------------------------------------
+
+# ==================================================
 # DOSYA YÜKLEME
-# --------------------------------------------------
+# ==================================================
 
 st.markdown(
     '<div class="section-title">📂 Veri Yükleme</div>',
@@ -82,9 +87,10 @@ uploaded_file = st.file_uploader(
     type=["csv", "xlsx"]
 )
 
-# --------------------------------------------------
+
+# ==================================================
 # DOSYA YÜKLENDİYSE
-# --------------------------------------------------
+# ==================================================
 
 if uploaded_file is not None:
 
@@ -120,7 +126,8 @@ if uploaded_file is not None:
         ]
 
         eksik_sutunlar = [
-            sutun for sutun in gerekli_sutunlar
+            sutun
+            for sutun in gerekli_sutunlar
             if sutun not in df.columns
         ]
 
@@ -135,9 +142,10 @@ if uploaded_file is not None:
 
         st.success("✅ Verileriniz başarıyla yüklendi!")
 
-        # --------------------------------------------------
-        # HESAPLAMALAR
-        # --------------------------------------------------
+
+        # ==================================================
+        # TEMEL HESAPLAMALAR
+        # ==================================================
 
         toplam_satis = df["Toplam_Satis"].sum()
 
@@ -165,9 +173,10 @@ if uploaded_file is not None:
             .idxmax()
         )
 
-        # --------------------------------------------------
+
+        # ==================================================
         # KPI DASHBOARD
-        # --------------------------------------------------
+        # ==================================================
 
         st.markdown(
             '<div class="section-title">🎯 İşletme Performansı</div>',
@@ -200,9 +209,10 @@ if uploaded_file is not None:
                 f"₺{ortalama_satis:,.0f}"
             )
 
-        # --------------------------------------------------
+
+        # ==================================================
         # İKİNCİ KPI SATIRI
-        # --------------------------------------------------
+        # ==================================================
 
         col5, col6, col7 = st.columns(3)
 
@@ -224,9 +234,10 @@ if uploaded_file is not None:
                 en_degerli_segment
             )
 
-        # --------------------------------------------------
+
+        # ==================================================
         # VERİ ÖNİZLEME
-        # --------------------------------------------------
+        # ==================================================
 
         st.markdown(
             '<div class="section-title">📋 Veri Önizleme</div>',
@@ -239,9 +250,10 @@ if uploaded_file is not None:
             height=350
         )
 
-        # --------------------------------------------------
-        # AYLIK SATIŞ
-        # --------------------------------------------------
+
+        # ==================================================
+        # AYLIK SATIŞ ANALİZİ
+        # ==================================================
 
         st.markdown(
             '<div class="section-title">📈 Aylık Satış Analizi</div>',
@@ -249,7 +261,9 @@ if uploaded_file is not None:
         )
 
         aylik_satis = (
-            df.groupby(df["Tarih"].dt.to_period("M"))["Toplam_Satis"]
+            df.groupby(
+                df["Tarih"].dt.to_period("M")
+            )["Toplam_Satis"]
             .sum()
         )
 
@@ -257,9 +271,10 @@ if uploaded_file is not None:
 
         st.line_chart(aylik_satis)
 
-        # --------------------------------------------------
+
+        # ==================================================
         # ÜRÜN ANALİZİ
-        # --------------------------------------------------
+        # ==================================================
 
         st.markdown(
             '<div class="section-title">📦 Ürün Performansı</div>',
@@ -297,9 +312,10 @@ if uploaded_file is not None:
                 hide_index=True
             )
 
-        # --------------------------------------------------
-        # MÜŞTERİ SEGMENTİ
-        # --------------------------------------------------
+
+        # ==================================================
+        # MÜŞTERİ SEGMENTİ ANALİZİ
+        # ==================================================
 
         st.markdown(
             '<div class="section-title">👥 Müşteri Segmenti Analizi</div>',
@@ -322,7 +338,7 @@ if uploaded_file is not None:
 
         with col2:
 
-            st.write("**Segment Satış Dağılımı**")
+            st.write("**Segment Satış Tablosu**")
 
             segment_tablosu = segment_satis.reset_index()
 
@@ -337,9 +353,10 @@ if uploaded_file is not None:
                 hide_index=True
             )
 
-        # --------------------------------------------------
+
+        # ==================================================
         # OTOMATİK İŞ İÇGÖRÜLERİ
-        # --------------------------------------------------
+        # ==================================================
 
         st.markdown(
             '<div class="section-title">💡 Otomatik İş İçgörüleri</div>',
@@ -353,7 +370,7 @@ if uploaded_file is not None:
         st.markdown(
             f"""
             <div class="insight-box">
-            🏆 <b>Ürün Performansı:</b><br>
+            🏆 <b>Ürün Performansı</b><br><br>
             {en_cok_satan_urun}, toplam satışların yaklaşık
             <b>%{urun_payi:.1f}</b>'ini oluşturuyor.
             </div>
@@ -364,7 +381,7 @@ if uploaded_file is not None:
         st.markdown(
             f"""
             <div class="insight-box">
-            👥 <b>Müşteri Analizi:</b><br>
+            👥 <b>Müşteri Analizi</b><br><br>
             En yüksek satış hacmine sahip müşteri segmenti
             <b>{en_degerli_segment}</b>.
             </div>
@@ -375,7 +392,7 @@ if uploaded_file is not None:
         st.markdown(
             f"""
             <div class="insight-box">
-            💰 <b>Satış Performansı:</b><br>
+            💰 <b>Satış Performansı</b><br><br>
             İşlem başına ortalama satış tutarı
             <b>₺{ortalama_satis:,.0f}</b>.
             </div>
@@ -386,7 +403,7 @@ if uploaded_file is not None:
         st.markdown(
             f"""
             <div class="insight-box">
-            📦 <b>Satış Hacmi:</b><br>
+            📦 <b>Satış Hacmi</b><br><br>
             Toplam <b>{toplam_adet:,.0f}</b> adet ürün satışı
             gerçekleşmiş durumda.
             </div>
@@ -394,9 +411,102 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
 
-        # --------------------------------------------------
+
+        # ==================================================
+        # YAPAY ZEKÂ ASİSTANI
+        # ==================================================
+
+        st.markdown(
+            '<div class="section-title">🤖 DataPilot Yapay Zekâ Asistanı</div>',
+            unsafe_allow_html=True
+        )
+
+        st.write(
+            "Satış verileriniz hakkında soru sorun ve "
+            "analiz sonuçlarını keşfedin."
+        )
+
+        soru = st.text_input(
+            "💬 Ne öğrenmek istiyorsunuz?",
+            placeholder="Örneğin: En çok satan ürün hangisi?"
+        )
+
+        if soru:
+
+            soru_lower = soru.lower()
+
+            if (
+                "en çok satan" in soru_lower
+                or "en iyi ürün" in soru_lower
+            ):
+
+                cevap = (
+                    f"🏆 En yüksek satış yapan ürün "
+                    f"**{en_cok_satan_urun}**. "
+                    f"Bu ürünün toplam satış tutarı "
+                    f"**₺{en_cok_satan_urun_tutari:,.0f}**."
+                )
+
+            elif (
+                "ciro" in soru_lower
+                or "toplam satış" in soru_lower
+            ):
+
+                cevap = (
+                    f"💰 Toplam satış hacmi "
+                    f"**₺{toplam_satis:,.0f}**."
+                )
+
+            elif (
+                "müşteri" in soru_lower
+                or "segment" in soru_lower
+            ):
+
+                cevap = (
+                    f"👥 En yüksek satış hacmine sahip "
+                    f"müşteri segmenti "
+                    f"**{en_degerli_segment}**."
+                )
+
+            elif "ortalama" in soru_lower:
+
+                cevap = (
+                    f"📊 Ortalama satış tutarı "
+                    f"**₺{ortalama_satis:,.0f}**."
+                )
+
+            elif "ürün" in soru_lower:
+
+                cevap = (
+                    f"📦 Verilerde toplam "
+                    f"**{df['Urun'].nunique()} farklı ürün** "
+                    f"bulunuyor. En yüksek satış yapan ürün "
+                    f"**{en_cok_satan_urun}**."
+                )
+
+            else:
+
+                cevap = (
+                    f"📊 Verilerinize göre toplam satış "
+                    f"**₺{toplam_satis:,.0f}**, toplam ürün adedi "
+                    f"**{toplam_adet:,.0f}** ve en yüksek satış yapan "
+                    f"ürün **{en_cok_satan_urun}**."
+                )
+
+            st.markdown(
+                f"""
+                <div class="insight-box">
+                🤖 <b>DataPilot:</b><br><br>
+                {cevap}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+        # ==================================================
         # VERİ ÖZETİ
-        # --------------------------------------------------
+        # ==================================================
 
         st.markdown(
             '<div class="section-title">📌 Veri Özeti</div>',
@@ -406,25 +516,39 @@ if uploaded_file is not None:
         col1, col2, col3 = st.columns(3)
 
         with col1:
+
             st.write(
                 f"**Veri Satırı:** {len(df):,}"
             )
 
         with col2:
+
             st.write(
                 f"**Ürün Sayısı:** {df['Urun'].nunique():,}"
             )
 
         with col3:
+
             st.write(
-                f"**Müşteri Segmenti:** {df['Musteri_Segmenti'].nunique():,}"
+                f"**Müşteri Segmenti:** "
+                f"{df['Musteri_Segmenti'].nunique():,}"
             )
+
+
+    # ==================================================
+    # HATA YAKALAMA
+    # ==================================================
 
     except Exception as e:
 
         st.error(
             f"❌ Veriler analiz edilirken bir hata oluştu: {e}"
         )
+
+
+# ==================================================
+# DOSYA YÜKLENMEDİYSE
+# ==================================================
 
 else:
 
@@ -440,19 +564,25 @@ else:
     col1, col2, col3 = st.columns(3)
 
     with col1:
+
         st.write("### 📊 Analiz")
+
         st.write(
             "Satış verilerinizi hızlıca analiz edin."
         )
 
     with col2:
+
         st.write("### 📈 Görselleştirme")
+
         st.write(
             "Satış trendlerini ve ürün performansını görüntüleyin."
         )
 
     with col3:
+
         st.write("### 🤖 Yapay Zekâ")
+
         st.write(
             "Verilerinizden otomatik iş içgörüleri elde edin."
         )
