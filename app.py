@@ -7,7 +7,7 @@ from ai_assistant import answer_question
 
 
 # ==================================================
-# SAYFA AYARLARI
+# SAYFA
 # ==================================================
 
 st.set_page_config(
@@ -27,90 +27,174 @@ DARK_NAVY = "#041127"
 BLUE = "#0B63CE"
 CYAN = "#06B6D4"
 TURQUOISE = "#18D5C0"
-LIGHT_BLUE = "#38BDF8"
 TEXT = "#10213F"
 MUTED = "#64748B"
 
 
 # ==================================================
-# TASARIM
+# GLOBAL TASARIM
 # ==================================================
 
 st.markdown(
     """
 <style>
 
-/* ================================
-   GENEL
-================================ */
+/* ==================================================
+   ANA SAYFA
+================================================== */
 
 .stApp {
     background:
         linear-gradient(
             135deg,
-            #F7FBFF 0%,
-            #EEF8FF 55%,
-            #F1FFFD 100%
+            #FFFFFF 0%,
+            #F7FBFF 48%,
+            #ECFBFA 100%
         );
 }
 
 .main .block-container {
     max-width: 1500px;
-    padding-top: 1.5rem;
+    padding-top: 1.4rem;
     padding-bottom: 3rem;
 }
 
 
-/* ================================
+/* ==================================================
+   TÜM ANA YAZILAR
+================================================== */
+
+.main .stMarkdown,
+.main .stMarkdown p,
+.main .stMarkdown span,
+.main .stMarkdown label,
+.main .stCaption,
+.main label {
+    color: #10213F;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #071A3A !important;
+}
+
+
+/* ==================================================
    SIDEBAR
-================================ */
+================================================== */
 
 section[data-testid="stSidebar"] {
     background:
         linear-gradient(
             180deg,
             #041127 0%,
-            #071A3A 55%,
-            #063B63 100%
+            #071A3A 52%,
+            #07516A 100%
         );
 }
 
 section[data-testid="stSidebar"] * {
-    color: white;
+    color: #FFFFFF !important;
 }
 
-.sidebar-subtitle {
-    color: #AFC8E4 !important;
-    font-size: 12px;
-    margin-bottom: 25px;
-}
-
-
-/* ================================
-   HERO CONTAINER
-================================ */
-
-div[data-testid="stVerticalBlockBorderWrapper"] {
-    border-radius: 24px !important;
-    border-color: #DCEAF4 !important;
-    background: rgba(255,255,255,0.82);
+section[data-testid="stSidebar"] .stCaption {
+    color: #B9D4EA !important;
 }
 
 
-/* ================================
+/* ==================================================
+   HERO
+================================================== */
+
+.hero-container {
+    background:
+        linear-gradient(
+            120deg,
+            #FFFFFF 0%,
+            #F6FBFF 55%,
+            #E1FAF7 100%
+        );
+
+    border: 1px solid #D7E8F2;
+
+    border-radius: 28px;
+
+    padding: 32px 36px;
+
+    margin-bottom: 24px;
+
+    box-shadow:
+        0 12px 35px rgba(7,26,58,0.07);
+}
+
+.hero-small {
+    color: #64748B;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.hero-title {
+    color: #071A3A;
+    font-size: 42px;
+    font-weight: 850;
+    letter-spacing: -1.5px;
+    margin: 4px 0;
+}
+
+.hero-highlight {
+    color: #0B63CE;
+}
+
+.hero-description {
+    color: #64748B;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+.hero-tagline {
+    color: #071A3A;
+    font-weight: 750;
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+
+/* ==================================================
+   SECTION BAŞLIKLARI
+================================================== */
+
+.section-title {
+    color: #071A3A !important;
+    font-size: 23px;
+    font-weight: 800;
+    margin-top: 30px;
+    margin-bottom: 14px;
+}
+
+
+/* ==================================================
    METRIC KARTLARI
-================================ */
+================================================== */
 
 div[data-testid="stMetric"] {
     background:
         linear-gradient(
             145deg,
-            #FFFFFF,
-            #F5FBFF
+            #FFFFFF 0%,
+            #F8FCFF 70%,
+            #EDFFFD 100%
         );
+
     border: 1px solid #DCEAF4;
-    border-radius: 20px;
+
+    border-radius: 22px;
+
     padding: 18px;
+
     box-shadow:
         0 8px 25px rgba(7,26,58,0.06);
 }
@@ -121,26 +205,71 @@ div[data-testid="stMetricLabel"] {
 
 div[data-testid="stMetricValue"] {
     color: #071A3A !important;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 
-/* ================================
-   BAŞLIKLAR
-================================ */
+/* ==================================================
+   GRAFİK KARTLARI
+================================================== */
 
-.section-title {
-    color: #071A3A;
-    font-size: 23px;
-    font-weight: 800;
-    margin-top: 30px;
-    margin-bottom: 15px;
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background:
+        rgba(255,255,255,0.92);
+
+    border:
+        1px solid #DCEAF4 !important;
+
+    border-radius:
+        22px !important;
+
+    box-shadow:
+        0 8px 25px rgba(7,26,58,0.045);
 }
 
 
-/* ================================
-   TABLO
-================================ */
+/* ==================================================
+   INPUT
+================================================== */
+
+div[data-baseweb="input"] {
+    background: #FFFFFF !important;
+    border-radius: 15px !important;
+    border: 1px solid #CBDDEB !important;
+}
+
+div[data-baseweb="input"] input {
+    color: #10213F !important;
+    background: #FFFFFF !important;
+}
+
+div[data-baseweb="input"] input::placeholder {
+    color: #8A9AAF !important;
+}
+
+
+/* ==================================================
+   TEXT AREA
+================================================== */
+
+textarea {
+    color: #10213F !important;
+    background: #FFFFFF !important;
+}
+
+
+/* ==================================================
+   INFO
+================================================== */
+
+div[data-testid="stAlert"] {
+    border-radius: 16px;
+}
+
+
+/* ==================================================
+   DATAFRAME
+================================================== */
 
 div[data-testid="stDataFrame"] {
     border-radius: 18px;
@@ -149,35 +278,49 @@ div[data-testid="stDataFrame"] {
 }
 
 
-/* ================================
+/* ==================================================
    EXPANDER
-================================ */
+================================================== */
 
 div[data-testid="stExpander"] {
-    border-radius: 18px;
+    background: #FFFFFF;
     border: 1px solid #DCEAF4;
-    background: white;
+    border-radius: 18px;
 }
 
 
-/* ================================
-   INPUT
-================================ */
-
-div[data-baseweb="input"] {
-    border-radius: 15px !important;
-}
-
-
-/* ================================
+/* ==================================================
    FOOTER
-================================ */
+================================================== */
 
-.footer-text {
-    color: #64748B;
+.footer {
     text-align: center;
+    color: #64748B;
     font-size: 12px;
-    padding: 25px 0;
+    padding: 30px 0 10px 0;
+}
+
+
+/* ==================================================
+   BUTON
+================================================== */
+
+.stButton > button {
+    background:
+        linear-gradient(
+            90deg,
+            #0B63CE,
+            #06B6D4,
+            #18D5C0
+        );
+
+    color: white !important;
+
+    border: none;
+
+    border-radius: 14px;
+
+    font-weight: 750;
 }
 
 </style>
@@ -194,11 +337,8 @@ with st.sidebar:
 
     st.title("📊 DataPilot")
 
-    st.markdown(
-        '<div class="sidebar-subtitle">'
-        'Yapay Zekâ Destekli İş Analitiği'
-        '</div>',
-        unsafe_allow_html=True
+    st.caption(
+        "Yapay Zekâ Destekli İş Analitiği"
     )
 
     st.markdown("### 🧭 Menü")
@@ -219,37 +359,46 @@ with st.sidebar:
     )
 
     st.info(
-        "CSV veya Excel satış verinizi yükleyerek "
-        "analizi başlatabilirsiniz."
+        "Satış verinizi yükleyerek "
+        "DataPilot analizini başlatın."
     )
 
 
 # ==================================================
-# DOSYA YÜKLENMEDİ
+# DOSYA YOK
 # ==================================================
 
 if uploaded_file is None:
 
-    with st.container(border=True):
+    st.markdown(
+        """
+        <div class="hero-container">
 
-        st.markdown("## 👋 Merhaba,")
+            <div class="hero-small">
+                YAPAY ZEKÂ DESTEKLİ İŞ ANALİZİ
+            </div>
 
-        st.markdown(
-            "# :blue[DataPilot]"
-        )
+            <div class="hero-title">
+                Merhaba,
+                <span class="hero-highlight">
+                    DataPilot
+                </span>
+            </div>
 
-        st.markdown(
-            "### Yapay zekâ destekli satış ve iş analizi platformu"
-        )
+            <div class="hero-description">
+                Satış verilerinizi analiz edin,
+                performansınızı ölçün ve
+                verilerinizden anlamlı iş içgörüleri elde edin.
+            </div>
 
-        st.write(
-            "Satış verilerinizi yükleyin, performansınızı analiz edin "
-            "ve verilerinizden anlamlı iş içgörüleri elde edin."
-        )
+            <div class="hero-tagline">
+                Veri → Analiz → İçgörü → Karar
+            </div>
 
-        st.markdown(
-            "**Veri → Analiz → İçgörü → Karar**"
-        )
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.info(
         "👈 Analize başlamak için sol menüden "
@@ -283,7 +432,7 @@ except Exception as e:
 
 
 # ==================================================
-# GEREKLİ SÜTUNLAR
+# SÜTUN KONTROLÜ
 # ==================================================
 
 gerekli_sutunlar = [
@@ -304,7 +453,7 @@ eksik_sutunlar = [
 if eksik_sutunlar:
 
     st.error(
-        "❌ Eksik sütunlar: "
+        "❌ Dosyada gerekli sütunlar bulunamadı: "
         + ", ".join(eksik_sutunlar)
     )
 
@@ -322,7 +471,7 @@ df["Tarih"] = pd.to_datetime(
 
 
 # ==================================================
-# TEMEL HESAPLAMALAR
+# KPI HESAPLARI
 # ==================================================
 
 toplam_satis = df["Toplam_Satis"].sum()
@@ -339,7 +488,7 @@ segment_sayisi = df["Musteri_Segmenti"].nunique()
 
 
 # ==================================================
-# ÜRÜN ANALİZİ
+# ÜRÜN
 # ==================================================
 
 urun_satis = (
@@ -360,7 +509,7 @@ en_cok_satan_urun_tutari = urun_satis.max()
 
 
 # ==================================================
-# SEGMENT ANALİZİ
+# SEGMENT
 # ==================================================
 
 segment_satis = (
@@ -375,7 +524,7 @@ en_degerli_segment_tutari = segment_satis.max()
 
 
 # ==================================================
-# AYLIK ANALİZ
+# AYLIK
 # ==================================================
 
 tarih_df = df.dropna(
@@ -413,25 +562,33 @@ else:
 # HERO
 # ==================================================
 
-with st.container(border=True):
+st.markdown(
+    """
+    <div class="hero-container">
 
-    st.markdown("## 👋 Merhaba,")
+        <div class="hero-small">
+            YAPAY ZEKÂ DESTEKLİ İŞ ANALİZİ
+        </div>
 
-    st.markdown(
-        "# :blue[DataPilot]"
-    )
+        <div class="hero-title">
+            Merhaba,
+            <span class="hero-highlight">
+                DataPilot
+            </span>
+        </div>
 
-    st.markdown(
-        "### Yapay zekâ destekli satış ve iş analizi platformu"
-    )
+        <div class="hero-description">
+            Satış verilerinizden anlamlı iş içgörüleri keşfedin.
+        </div>
 
-    st.write(
-        "Satış verilerinizden anlamlı iş içgörüleri keşfedin."
-    )
+        <div class="hero-tagline">
+            Veri → Analiz → İçgörü → Karar
+        </div>
 
-    st.markdown(
-        "**Veri → Analiz → İçgörü → Karar**"
-    )
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 
 st.success(
@@ -448,10 +605,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
+k1, k2, k3, k4, k5 = st.columns(5)
 
 
-with kpi1:
+with k1:
 
     st.metric(
         "💰 Toplam Satış",
@@ -459,7 +616,7 @@ with kpi1:
     )
 
 
-with kpi2:
+with k2:
 
     st.metric(
         "📦 Toplam Adet",
@@ -467,7 +624,7 @@ with kpi2:
     )
 
 
-with kpi3:
+with k3:
 
     st.metric(
         "🧾 İşlem Sayısı",
@@ -475,7 +632,7 @@ with kpi3:
     )
 
 
-with kpi4:
+with k4:
 
     st.metric(
         "💳 Ortalama Satış",
@@ -483,7 +640,7 @@ with kpi4:
     )
 
 
-with kpi5:
+with k5:
 
     st.metric(
         "👥 En Değerli Segment",
@@ -502,10 +659,6 @@ st.markdown(
 
 col1, col2 = st.columns([1.6, 1])
 
-
-# ==================================================
-# AYLIK SATIŞ
-# ==================================================
 
 with col1:
 
@@ -568,10 +721,6 @@ with col1:
             )
 
 
-# ==================================================
-# ÜRÜN DAĞILIMI
-# ==================================================
-
 with col2:
 
     with st.container(border=True):
@@ -602,9 +751,7 @@ with col2:
                     width=3
                 )
             ),
-            textinfo="percent",
-            hovertemplate=
-            "%{label}<br>₺%{value:,.0f}<extra></extra>"
+            textinfo="percent"
         )
 
         fig.update_layout(
@@ -615,8 +762,7 @@ with col2:
                 t=5,
                 b=5
             ),
-            paper_bgcolor="white",
-            showlegend=True
+            paper_bgcolor="white"
         )
 
         st.plotly_chart(
@@ -629,7 +775,7 @@ with col2:
 
 
 # ==================================================
-# ÜRÜN VE SEGMENT
+# ÜRÜN + SEGMENT
 # ==================================================
 
 col1, col2 = st.columns(2)
@@ -652,9 +798,7 @@ with col1:
         )
 
         fig.update_traces(
-            marker_color="#0B63CE",
-            hovertemplate=
-            "₺%{x:,.0f}<extra></extra>"
+            marker_color="#0B63CE"
         )
 
         fig.update_layout(
@@ -691,7 +835,7 @@ with col2:
 
     with st.container(border=True):
 
-        st.subheader("👥 Müşteri Segmenti Analizi")
+        st.subheader("👥 Müşteri Segmentleri")
 
         st.caption(
             "Segmentlere göre satış hacmi"
@@ -704,9 +848,7 @@ with col2:
         )
 
         fig.update_traces(
-            marker_color="#18D5C0",
-            hovertemplate=
-            "₺%{x:,.0f}<extra></extra>"
+            marker_color="#18D5C0"
         )
 
         fig.update_layout(
@@ -779,9 +921,7 @@ with col1:
                         size=9
                     ),
                     fill="tozeroy",
-                    fillcolor="rgba(24,213,192,0.10)",
-                    hovertemplate=
-                    "%{y:,.0f} adet<extra></extra>"
+                    fillcolor="rgba(24,213,192,0.10)"
                 )
             )
 
@@ -817,7 +957,7 @@ with col2:
 
     with st.container(border=True):
 
-        st.subheader("🔄 Satış ve Adet Karşılaştırması")
+        st.subheader("🔄 Satış ve Adet")
 
         st.caption(
             "Aylık satış tutarı ve ürün adedi"
@@ -836,12 +976,7 @@ with col2:
                     line=dict(
                         color=BLUE,
                         width=4
-                    ),
-                    marker=dict(
-                        size=8
-                    ),
-                    hovertemplate=
-                    "₺%{y:,.0f}<extra></extra>"
+                    )
                 )
             )
 
@@ -855,12 +990,7 @@ with col2:
                         color=TURQUOISE,
                         width=4
                     ),
-                    marker=dict(
-                        size=8
-                    ),
-                    yaxis="y2",
-                    hovertemplate=
-                    "%{y:,.0f} adet<extra></extra>"
+                    yaxis="y2"
                 )
             )
 
@@ -886,8 +1016,7 @@ with col2:
                     side="right"
                 ),
                 legend=dict(
-                    orientation="h",
-                    y=1.12
+                    orientation="h"
                 )
             )
 
@@ -915,10 +1044,10 @@ urun_payi = (
     else 0
 )
 
-insight1, insight2, insight3 = st.columns(3)
+i1, i2, i3 = st.columns(3)
 
 
-with insight1:
+with i1:
 
     with st.container(border=True):
 
@@ -939,7 +1068,7 @@ with insight1:
         )
 
 
-with insight2:
+with i2:
 
     with st.container(border=True):
 
@@ -960,7 +1089,7 @@ with insight2:
         )
 
 
-with insight3:
+with i3:
 
     with st.container(border=True):
 
@@ -973,12 +1102,12 @@ with insight3:
 
         st.write(
             "İşlem başına gerçekleşen "
-            "ortalama satış tutarıdır."
+            "ortalama satış tutarı."
         )
 
 
 # ==================================================
-# ÜRÜN PERFORMANS TABLOSU
+# ÜRÜN TABLOSU
 # ==================================================
 
 st.markdown(
@@ -1025,7 +1154,9 @@ st.markdown(
 
 with st.container(border=True):
 
-    st.markdown("### 🤖 DataPilot AI")
+    st.markdown(
+        "### 🤖 DataPilot AI"
+    )
 
     st.markdown(
         "**YAPAY ZEKÂ ASİSTANI**"
@@ -1042,31 +1173,31 @@ with st.container(border=True):
 
     with q1:
 
-        st.caption(
+        st.write(
             "• En çok satan ürün hangisi?"
         )
 
-        st.caption(
+        st.write(
             "• Toplam satış ne kadar?"
         )
 
     with q2:
 
-        st.caption(
+        st.write(
             "• En değerli müşteri segmenti hangisi?"
         )
 
-        st.caption(
+        st.write(
             "• En çok hangi ay satış yapıldı?"
         )
 
     with q3:
 
-        st.caption(
-            "• Laptop satışları nasıl?"
+        st.write(
+            "• Laptop Pro satışları nasıl?"
         )
 
-        st.caption(
+        st.write(
             "• Genel performans nasıl?"
         )
 
@@ -1089,13 +1220,13 @@ if soru:
         soru
     )
 
-    st.markdown("### 🤖 DataPilot'ın Cevabı")
+    st.markdown(
+        "### 🤖 DataPilot'ın Cevabı"
+    )
 
-    with st.container(border=True):
-
-        st.success(
-            cevap
-        )
+    st.success(
+        cevap
+    )
 
 
 # ==================================================
@@ -1107,10 +1238,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-ozet1, ozet2, ozet3 = st.columns(3)
+o1, o2, o3 = st.columns(3)
 
 
-with ozet1:
+with o1:
 
     st.metric(
         "Veri Satırı",
@@ -1118,7 +1249,7 @@ with ozet1:
     )
 
 
-with ozet2:
+with o2:
 
     st.metric(
         "Ürün Sayısı",
@@ -1126,7 +1257,7 @@ with ozet2:
     )
 
 
-with ozet3:
+with o3:
 
     st.metric(
         "Müşteri Segmenti",
@@ -1151,13 +1282,14 @@ with st.expander("📄 Ham Veriyi Görüntüle"):
 # FOOTER
 # ==================================================
 
-st.divider()
-
 st.markdown(
-    '<div class="footer-text">'
-    'DataPilot • Satış Verileri Analiz ve İş İçgörü Platformu'
-    '<br>'
-    'Veri → Analiz → İçgörü → Karar'
-    '</div>',
+    """
+    <div class="footer">
+        <b>DataPilot</b>
+        • Satış Verileri Analiz ve İş İçgörü Platformu
+        <br>
+        Veri → Analiz → İçgörü → Karar
+    </div>
+    """,
     unsafe_allow_html=True
 )
