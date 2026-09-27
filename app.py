@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from textwrap import dedent
-
 from ai_assistant import answer_question
 
 
@@ -714,60 +712,10 @@ else:
 # HERO
 # ==================================================
 
+hero_html = f"""<div class="hero"><div class="hero-copy"><div class="hero-small">YAPAY ZEKÂ DESTEKLİ İŞ ANALİZİ</div><div class="hero-title">Merhaba, <span class="hero-highlight">DataPilot</span></div><div class="hero-description">Satış verilerinizden anlamlı iş içgörüleri keşfedin.</div><div class="hero-flow"><span>🗄️ Veri</span><b>→</b><span>📊 Analiz</span><b>→</b><span>💡 İçgörü</span><b>→</b><span>🎯 Karar</span></div></div><div class="hero-visual"><div class="hero-date">📅 {tarih_metni}</div><div class="mini-chart"><i style="height:28%"></i><i style="height:45%"></i><i style="height:58%"></i><i style="height:38%"></i><i style="height:75%"></i><i style="height:92%"></i></div></div></div>"""
+
 st.markdown(
-    dedent(
-        f"""
-        <div class="hero">
-
-            <div class="hero-copy">
-
-                <div class="hero-small">
-                    YAPAY ZEKÂ DESTEKLİ İŞ ANALİZİ
-                </div>
-
-                <div class="hero-title">
-                    Merhaba,
-                    <span class="hero-highlight">
-                        DataPilot
-                    </span>
-                </div>
-
-                <div class="hero-description">
-                    Satış verilerinizden anlamlı iş içgörüleri keşfedin.
-                </div>
-
-                <div class="hero-flow">
-                    <span>🗄️ Veri</span>
-                    <b>→</b>
-                    <span>📊 Analiz</span>
-                    <b>→</b>
-                    <span>💡 İçgörü</span>
-                    <b>→</b>
-                    <span>🎯 Karar</span>
-                </div>
-
-            </div>
-
-            <div class="hero-visual">
-
-                <div class="hero-date">
-                    📅 {tarih_metni}
-                </div>
-
-                <div class="mini-chart">
-                    <i style="height:28%"></i>
-                    <i style="height:45%"></i>
-                    <i style="height:58%"></i>
-                    <i style="height:38%"></i>
-                    <i style="height:75%"></i>
-                    <i style="height:92%"></i>
-                </div>
-
-            </div>
-
-        </div>
-        """
-    ),
+    hero_html,
     unsafe_allow_html=True
 )
 
@@ -1423,44 +1371,10 @@ st.dataframe(
 
 st.markdown("## 🤖 DataPilot AI")
 
+ai_html = """<div class="ai-panel"><div class="ai-label">YAPAY ZEKÂ ASİSTANI</div><div class="ai-title">DataPilot AI</div><div class="ai-description">Satış verilerinizi analiz edin, sorularınızı yazın ve verilerinizden anlamlı cevaplar alın.</div><span class="ai-chip">En çok satan ürün hangisi?</span><span class="ai-chip">Toplam satış ne kadar?</span><span class="ai-chip">En değerli müşteri segmenti hangisi?</span><span class="ai-chip">Genel performans nasıl?</span></div>"""
+
 st.markdown(
-    dedent(
-        """
-        <div class="ai-panel">
-
-            <div class="ai-label">
-                YAPAY ZEKÂ ASİSTANI
-            </div>
-
-            <div class="ai-title">
-                DataPilot AI
-            </div>
-
-            <div class="ai-description">
-                Satış verilerinizi analiz edin,
-                sorularınızı yazın ve verilerinizden
-                anlamlı cevaplar alın.
-            </div>
-
-            <span class="ai-chip">
-                En çok satan ürün hangisi?
-            </span>
-
-            <span class="ai-chip">
-                Toplam satış ne kadar?
-            </span>
-
-            <span class="ai-chip">
-                En değerli müşteri segmenti hangisi?
-            </span>
-
-            <span class="ai-chip">
-                Genel performans nasıl?
-            </span>
-
-        </div>
-        """
-    ),
+    ai_html,
     unsafe_allow_html=True
 )
 
